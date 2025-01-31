@@ -1,0 +1,40 @@
+/* Estilos para el enlace de cambiar contraseña */
+.change-password {
+    color: blue;
+    font-size: 14px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  /* Estilos para el mensaje agradable */
+  .friendly-message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+
+/* Estilos adicionales para cambiar contraseña y mensaje agradable */
+.change-password,
+.friendly-message {
+  display: block;
+  text-align: right;
+}
+
+
+/* Estilos para la animación de giro del formulario */
+.rotate-form {
+    animation: rotateAnimation 1s;
+  }
+  
+  @keyframes rotateAnimation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+
+  
+  
+/* Resto de tus estilos personalizados */

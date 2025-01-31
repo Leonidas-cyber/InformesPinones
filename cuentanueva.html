@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administracion Piñones</title>
+  <link rel="icon" href="img/favicon.ico">
+    <!-- Librería de iconos -->
+    <script src="https://kit.fontawesome.com/8dca05f736.js"></script>
+  <!-- CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!-- CSS personalizado -->
+  <link rel="stylesheet" href="ADMI/styles.css">
+  <!--Se supone que sirve-->
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <script src="JS/bloqueo.js"></script>
+
+    <!--Firebase-->
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+   <style>
+    body.dark-mode {
+    background-color: #343a40;
+    color: #fff;
+      }
+
+      body.dark-mode .card {
+        background-color: #212529;
+        color: #fff;
+      }
+</style>
+
+   <!--Configuracion de Script de logueo-->
+   <script src="firebase-config.js"></script>
+  
+    <!--script de verificacion de logueo-->
+    <script>
+     firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        // Usuario no autenticado, redirigir a la página de inicio de sesión
+        window.location.href = '/yetilogin/indexyeti.html';
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut()
+      .then(() => {
+        // Cierre de sesión exitoso
+        console.log('Cierre de sesión exitoso');
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Sesión cerrada con éxito',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          setTimeout(function() {
+            window.location.href = '/yetilogin/indexyeti.html';
+          }, 2000); // Esperar 2 segundos antes de redirigir
+        });
+      })
+      .catch((error) => {
+        // Ocurrió un error durante el cierre de sesión
+        console.log('Error en el cierre de sesión:', error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el cierre de sesión',
+          text: error.message
+        });
+      });
+    }
+
+    </script><!--Firebase-->
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+   <!--Configuracion de Script de logueo-->
+   <script src="firebase-config.js"></script>
+  
+    <!--script de verificacion de logueo-->
+    <script>
+     firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        // Usuario no autenticado, redirigir a la página de inicio de sesión
+        window.location.href = '/yetilogin/indexyeti.html';
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut()
+      .then(() => {
+        // Cierre de sesión exitoso
+        console.log('Cierre de sesión exitoso');
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Sesión cerrada con éxito',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          setTimeout(function() {
+            window.location.href = '/yetilogin/indexyeti.html';
+          }, 2000); // Esperar 2 segundos antes de redirigir
+        });
+      })
+      .catch((error) => {
+        // Ocurrió un error durante el cierre de sesión
+        console.log('Error en el cierre de sesión:', error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el cierre de sesión',
+          text: error.message
+        });
+      });
+    }
+
+    </script>
+   <!--MODO OSCURO-->
+   <script>
+    // Función para habilitar el modo oscuro
+    function enableDarkMode() {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    }
+  
+    // Función para deshabilitar el modo oscuro
+    function disableDarkMode() {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
+    }
+  
+    // Verificar el tema almacenado en localStorage
+    var storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      enableDarkMode();
+    }
+  
+    // Evento de cambio de tema
+    function toggleDarkMode() {
+      if (document.body.classList.contains('dark-mode')) {
+        disableDarkMode();
+      } else {
+        enableDarkMode();
+      }
+    }
+  </script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+       <!-- Menú lateral -->
+       <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/cards.html"><img src="ADMI/favicon.ico" height="35px"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+            <a class="nav-link" href="/cards.html">
+                <i class="fas fa-home mr-2"></i>
+                Inicio
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/informes.html">
+              <i class="fas fa-book mr-2"></i>
+                Informes
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/historial.html">
+                <i class="fas fa-history mr-2"></i>
+                Historial
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link active" href="/cuenta.html">
+                <i class="fas fa-question mr-2"></i>
+               Ayuda
+            </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/estadisticas.html">
+                <i class="fas fa-project-diagram mr-2"></i>
+                 Estadisticas
+              </a>
+              </li>
+
+              <li class="nav-item">
+                <button id="cambiar-tema" class="nav-link btn btn-link" onclick="toggleDarkMode()">
+                  <i class="fas fa-adjust mr-2"></i>
+                  Cambiar tema
+                </button>
+              </li>
+           
+
+           
+           
+        </ul>
+        </div>
+    </nav>
+      
+        
+        <script>
+            // Agregar la clase "show" al menú al hacer clic en el botón de hamburguesa
+            document.querySelector(".navbar-toggler").addEventListener("click", function() {
+            document.querySelector("#navbarCollapse").classList.toggle("show");
+            });
+        </script>
+
+
+        <style>
+          .card{
+            margin-top:140px;
+          }
+        </style>
+      <!-- Contenido principal -->
+        <!-- Contenido principal -->
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-md-6 mx-auto">
+              <div class="card">
+              <div class="card-body">
+                <h2 class="card-title text-center mb-4">Crear Cuenta nueva</h2>
+                <form id="registro-form">
+                  <div class="form-group">
+                    <label for="email" class="form-label">Correo electrónico:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Introduzca su correo electrónico" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <div class="password-container">
+                      <input type="password" minlength="6" class="form-control" id="password" placeholder="Introduzca su contraseña" required>
+                      <span class="password-toggle"><i class="fas fa-eye"></i></span>
+                    </div>
+                    <style>
+                      .password-container {
+                        position: relative;
+                      }
+
+                      .password-toggle {
+                        position: absolute;
+                        top: 50%;
+                        right: 10px;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                      }
+
+                      .password-toggle i {
+                        color: #000000;
+                      }
+
+                      .password-toggle i:hover {
+                        color: #000000;
+                      }
+
+                      .password-toggle.active i {
+                        color: #000000;
+                      }
+
+                      .password-toggle.active i::before {
+                        content: "\f070";
+                      }
+
+                      .password-toggle i::before {
+                        content: "\f06e";
+                        font-family: "Font Awesome 5 Free";
+                        font-weight: 900;
+                      }
+
+                    </style>
+
+                    <script>
+                      const passwordToggle = document.querySelector('.password-toggle');
+                      const passwordInput = document.getElementById('password');
+
+                      passwordToggle.addEventListener('click', function() {
+                        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordInput.setAttribute('type', type);
+                        this.classList.toggle('active');
+                      });
+
+                    </script>
+
+
+                    <!-- CAMPO PARA HACER VISIBLE LA CONTRASEÑA POR MEDIO DE UN CHECKBOX Y UN SCRIPT-->
+                    <!--
+                      <input type="checkbox" id="show-password">
+                    <label for="show-password">Mostrar contraseña</label>
+        
+                    <script>
+                        const showPasswordCheckbox = document.getElementById('show-password');
+                        const passwordInput = document.getElementById('password');
+        
+                        showPasswordCheckbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            passwordInput.type = 'text';
+                        } else {
+                            passwordInput.type = 'password';
+                        }
+                        });
+        
+                    </script>-->
+                  </div>
+                  <button onclick="enviar()" type="submit" class="btn btn-success">Crear Cuenta</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <!--Fin del contenido principal-->
+    </div>
+  </div>
+    <!-- Librería de iconos -->
+    <script src="https://kit.fontawesome.com/your_kit_id.js"></script>
+  <script src="crearcuenta.js"></script>
+ <!--almacenar opcion de color-->
+ <script>
+  // Evento de carga de la página
+  document.addEventListener('DOMContentLoaded', function() {
+    // Verificar el tema almacenado
+    var storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  });
+</script>
+
+</body>
+</html>

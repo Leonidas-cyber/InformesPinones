@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administracion Piñones</title>
+  <link rel="icon" href="img/favicon.ico">
+  <!-- CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+  <script src="https://kit.fontawesome.com/8dca05f736.js"></script>
+  <!-- Agrega la biblioteca DataTables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.2/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+    <script src="JS/bloqueo.js"></script>
+    <!-- Incluir jQuery y DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>
+
+<!-- Incluir DataTables Responsive Extension -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+    <style>
+       body.dark-mode {
+        background-color: #343a40;
+        color: #fff;
+      }
+
+      body.dark-mode .card {
+        background-color: #212529;
+        color: #fff;
+      }
+
+      body.dark-mode table td {
+        color: #fff;
+      }
+      body.dark-mode table th {
+        color: #fff;
+      }
+      .table-responsive {
+        margin-top: 65px;
+      } 
+      /* Estilos CSS para DataTables responsive */
+      .container-fluid {
+        max-width: 90%; /* Ancho máximo del contenedor */
+        margin: 0 auto; /* Centrar el contenedor */
+      }
+          
+      /* Ajustes de estilo para DataTables en pantallas grandes */
+      #tablaInformes_wrapper .dataTables_scroll,
+      #tablaInformes_wrapper .dataTables_scrollBody {
+        overflow-x: auto; /* Agregar barra de desplazamiento horizontal si es necesario */
+      }
+
+      #tablaInformes th,
+      #tablaInformes td {
+        white-space: nowrap; /* Evitar que el texto se ajuste automáticamente */
+        text-overflow: ellipsis; /* Agregar puntos suspensivos para texto largo */
+      }
+
+      #tablaInformes_wrapper .dataTables_scrollHeadInner {
+        white-space: nowrap; /* Evitar el ajuste de texto en los encabezados */
+      }
+    </style>
+    <!--Firebase-->
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+   <!--Configuracion de Script de logueo-->
+   <script src="firebase-config.js"></script>
+  
+    <!--script de verificacion de logueo-->
+    <script>
+     firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        // Usuario no autenticado, redirigir a la página de inicio de sesión
+        window.location.href = '/yetilogin/indexyeti.html';
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut()
+      .then(() => {
+        // Cierre de sesión exitoso
+        console.log('Cierre de sesión exitoso');
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Sesión cerrada con éxito',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          setTimeout(function() {
+            window.location.href = '/yetilogin/indexyeti.html';
+          }, 2000); // Esperar 2 segundos antes de redirigir
+        });
+      })
+      .catch((error) => {
+        // Ocurrió un error durante el cierre de sesión
+        console.log('Error en el cierre de sesión:', error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el cierre de sesión',
+          text: error.message
+        });
+      });
+    }
+
+    </script>
+    
+    <!--MODO OSCURO-->
+    <script>
+      // Función para habilitar el modo oscuro
+      function enableDarkMode() {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      }
+    
+      // Función para deshabilitar el modo oscuro
+      function disableDarkMode() {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    
+      // Verificar el tema almacenado en localStorage
+      var storedTheme = localStorage.getItem('theme');
+      if (storedTheme === 'dark') {
+        enableDarkMode();
+      }
+    
+      // Evento de cambio de tema
+      function toggleDarkMode() {
+        if (document.body.classList.contains('dark-mode')) {
+          disableDarkMode();
+        } else {
+          enableDarkMode();
+        }
+      }
+    </script>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <div class="row">
+        <!-- Menú lateral -->
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+          <a class="navbar-brand" href="/cards.html"><img src="ADMI/favicon.ico" height="35px"></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+              <a class="nav-link" href="/cards.html">
+                  <i class="fas fa-home mr-2"></i>
+                  Inicio
+              </a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link active" href="/informes.html">
+                <i class="fas fa-book mr-2"></i>
+                  Informes
+              </a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link " href="/historial.html">
+                  <i class="fas fa-history mr-2"></i>
+                  Historial
+              </a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/cuenta.html">
+                  <i class="fas fa-question mr-2"></i>
+                 Ayuda
+              </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/estadisticas.html">
+                  <i class="fas fa-project-diagram mr-2"></i>
+                   Estadisticas
+                </a>
+                </li>
+                <!-- botón de cerrar sesión actualizado-->
+                <li class="nav-item">
+                  <button id="cerrar-sesion" class="nav-link btn btn-link" onclick="logout()">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Cerrar sesión
+                  </button>                  
+                </li>
+
+                <li class="nav-item">
+                  <button id="cambiar-tema" class="nav-link btn btn-link" onclick="toggleDarkMode()">
+                    <i class="fas fa-adjust mr-2"></i>
+                    Cambiar tema
+                  </button>
+                </li>
+             
+          </ul>
+          </div>
+      </nav>
+        
+        <script>
+          // Código JavaScript para el menú lateral
+          document.addEventListener("DOMContentLoaded", function() {
+            // Busca todos los elementos con la clase "dropdown-toggle"
+            var dropdownToggle = document.querySelectorAll('.dropdown-toggle');
+            // Itera sobre cada elemento "dropdown-toggle"
+            for (var i = 0; i < dropdownToggle.length; i++) {
+              dropdownToggle[i].addEventListener('click', function() {
+                // Obtiene el menú desplegable asociado al elemento "dropdown-toggle" actual
+                var dropdownMenu = this.nextElementSibling;
+                // Alternar la clase "show" para mostrar u ocultar el menú desplegable
+                dropdownMenu.classList.toggle('show');
+              });
+            }
+          });
+        </script> 
+         <!--class="table table-striped table-hover table-dark"-->
+          <h1>  Informes del mes</h1>
+        <div class="table-responsive" >
+          <table id="tablaInformes"  class="table table-bordered display nowrap" cellspacing="0" style="width: 100%;">
+            <thead class="text-center">
+              <tr>
+                  <th>ID</th>                        
+                  <th>NOMBRE</th>
+                  <th>ROL</th>
+                  <th>MINISTERIO</th>
+                  <th>CURSOS</th>
+                  <th>HORAS</th>                                                          
+                  <th>SUPERINTENDENTE</th>
+                  <th>NOTAS</th>
+                  <th>FECHA DE ENVIO</th>
+                  <th>ACCIONES</th>
+              </tr>
+          </thead>
+        </table>
+      </div>
+
+           <!-- Modal para la edición -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Editar Informe</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm">
+          <!-- Campos de edición -->
+          <div class="form-group">
+            <label for="edit-nombre-completo">Nombre Completo</label>
+            <input type="text" class="form-control" id="edit-nombre-completo" name="nombre-completo" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-rol">Rol</label>
+            <select type="text" class="form-control" id="edit-rol" name="rol" required>
+              <option value="">Seleccione una opción</option>
+              <option value="Publicador">Publicador</option>
+              <option value="Precursor Auxiliar">Precursor Auxiliar</option>
+              <option value="Precursor Regular">Precursor Regular</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-hours">Número de Horas</label>
+            <input type="number" class="form-control" id="edit-hours" name="numero-horas" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-bibleCourse">Cursos Bíblicos</label>
+            <input type="number" class="form-control" id="edit-bibleCourse" name="cursoBiblicos" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-participo">¿Participó?</label>
+            <select class="form-control" id="edit-participo" name="participo" required>
+              <option value="Sí">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-superintendente">Superintendente</label>
+            <select type="text" class="form-control" id="edit-superintendente" name="superintendente" required>
+              <option value="">Seleccione una opción</option>
+              <option value="Alfonso.P Grupo 1">Alfonso.P Grupo 1</option>
+              <option value="Rafael.G Grupo 2">Rafael.G Grupo 2</option>
+              <option value="Alberto.G Grupo 3">Alberto.G Grupo 3</option>
+              <option value="Josue.T Grupo 4">Josue.T Grupo 4</option>
+              <option value="David.N Grupo 5">David.N Grupo 5</option>
+            </select>    
+          </div>
+          <!-- Otros campos según sea necesario -->
+          <input type="hidden" id="edit-key" name="key">
+
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Agrega el siguiente script al final del archivo para inicializar DataTables -->
+  <!--SCRIPTS NECESARIO , VER SI SE PUEDEN SUSTITUIR-->
+  
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+ 
+   <!-- sweetalert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.14.2/dist/sweetalert2.all.min.js"></script>
+
+   <!-- The core Firebase JS SDK is always required and must be listed first -->
+   <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase.js"></script>
+
+  
+   <script type="text/javascript" src="ADMI/app.js"></script>
+   <!--Fin del contenido de funcionalidad de la tabla-->
+
+  <script>
+    document.getElementById('cerrar-sesion').addEventListener('click', function(event) {
+      event.preventDefault();
+      Swal.fire({
+        icon: 'success',
+        title: 'Sesión cerrada con éxito',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(function() {
+        window.location.href = '/login.html';
+      });
+    });
+
+  </script>
+
+   <!--almacenar opcion de color-->
+   <script>
+    // Evento de carga de la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificar el tema almacenado
+      var storedTheme = localStorage.getItem('theme');
+      if (storedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</body>
+</html>

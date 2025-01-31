@@ -1,0 +1,248 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+.dark-mode {
+    background-color: #111828;
+    color: #fff;
+}
+.navbar, .footer {
+    display: flex;
+   justify-content: space-between;
+    align-items: center;
+    background-color: #353a40;
+    color: #fff;
+}
+.navbar .left-menu, .navbar .right-menu,
+.footer .left-footer, .footer .right-footer {
+    display: flex;
+    align-items: center;
+}
+.navbar button, .navbar a, .footer a {
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 10px 25px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+}
+.navbar button:hover, .navbar a:hover, .footer a:hover {
+    background-color: #353a40;
+}
+.container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 450px;
+    margin: 25px auto;
+    transition: background-color 0.3s, color 0.3s;
+}
+.dark-mode .container {
+    background-color: #202938;
+    color: #fff;
+}
+.container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.container input[type="text"],
+.container select,
+.container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+
+.container input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+
+.container button.yes,
+.container button.no {
+    padding: 8px 25px; /* Ajusta el padding para reducir el tamaño */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px; /* Ajusta el tamaño de la fuente si es necesario */
+    color: #e6e6e6;
+}
+.container button.yes {
+    background-color: #b9d8ba; /* Green */
+}
+.container button.no {
+    background-color: #f8b1ab; /* Red */
+}
+.container button.yes.selected {
+    background-color: #6abf69; /* Lighter Green when selected */
+}
+.container button.no.selected {
+    background-color: #ff6659; /* Lighter Red when selected */
+}
+
+.container .clear-btn,
+.container button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+.container .clear-btn {
+    background-color: #ffc107;
+    margin-bottom: 10px;
+}
+.container button[type="submit"]:disabled {
+    background-color: #ccc;
+}
+
+
+.left-footer img {
+    height: 30px; /* Ajusta el tamaño del logo según sea necesario */
+    margin-right: 10px;
+}
+
+.left-footer span {
+    font-weight: bold;
+}
+
+.right-footer {
+    display: flex;
+    align-items: center;
+}
+
+.right-footer img {
+    margin-right: 10px;
+}
+
+.right-footer a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.right-footer a:hover {
+    text-decoration: underline;
+}
+
+.footer img {
+    height: 40px;
+    margin-right: 10px;
+}
+.banner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: #3b82f6;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 1000;
+}
+.banner .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.slider {
+position: relative;
+width: 80px;
+height: 40px;
+background-color: #949494;
+border-radius: 20px;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+.slider .thumb {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    background-color: transparent; /* Quitamos el color de fondo */
+    background-image: url('/img/SUN.png'); /* Agregamos la imagen como fondo */
+    background-size: cover; /* Ajustamos el tamaño de la imagen */
+    background-repeat: no-repeat; /* Evitamos que se repita la imagen */
+    background-position: center; /* Centramos la imagen */
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+}
+
+.slider .sun {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+}
+
+.slider .moon {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+}
+
+.slider.active {
+    background-color: #949494;;
+}
+.slider.active .thumb {
+    left: 40px;
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    background-color: transparent; /* Quitamos el color de fondo */
+    background-image: url('/img/MOON.png'); /* Agregamos la imagen como fondo */
+    background-size: cover; /* Ajustamos el tamaño de la imagen */
+    background-repeat: no-repeat; /* Evitamos que se repita la imagen */
+    background-position: center; /* Centramos la imagen */
+    border-radius: 50%;
+    top: 2px;
+    transition: left 0.3s;
+}
+
+.dark-mode .container input[type="text"],
+.dark-mode .container input[type="number"],
+.dark-mode .container select,
+.dark-mode .container textarea {
+    background-color: #384152; /* Cambia el color de fondo */
+    color: #eee; /* Cambia el color del texto */
+    border-color: #666; /* Cambia el color del borde */
+}
+
+.dark-mode .container input[type="text"]::placeholder,
+.dark-mode .container input[type="number"]::placeholder,
+.dark-mode .container select::placeholder,
+.dark-mode .container textarea::placeholder {
+    color: #ccc; /* Cambia el color del placeholder */
+}

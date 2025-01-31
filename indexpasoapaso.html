@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congregacion Pinones</title>
+    <!--FAVICON-->
+    <link rel="icon" href="/img/favicon.ico">
+    <!--FIREBASE-->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+	<!--ALERTAS POP-UP-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!--VALIDACION-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <!--Estilo nuevo-->
+    <link rel="stylesheet" href="/CSS/indexnew.css">
+    <script src="/JS/systemResponsiveAyuda.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.css" />
+    <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6.3.1/dist/tippy-bundle.umd.min.js"></script>
+    <link rel="stylesheet" href="/CSS/pasopaso.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="left-menu">
+            <div class="slider" id="dark-mode-toggle">
+                <i class="fas fa-sun sun"></i>
+                <i class="fas fa-moon moon"></i>
+                <div class="thumb"></div>
+            </div>
+        </div>
+        <div class="right-menu">
+            <a href="/yetilogin/indexyeti.html" id="login"><i class="fas fa-user-alt"></i></a>
+            <a href="#" id="info"><i class="fas fa-info-circle"></i></a>
+        </div>
+    </div>
+    <!-- DE AQUI EN ADELANTE SE PUEDE MODIFICA EL CODIGO-->
+    <div class="container" id="form-container">
+        <h1 id="form-title">Informes mes de <span id="current-month"></span> 2024</h1>
+        <form id="guided-form">
+            <div class="form-step active">
+                <label for="nombre-completo">Nombre Completo:</label>
+                <input type="text" id="nombre-completo" name="nombre-completo" placeholder="Nombre completo" required data-tippy-content="Ingrese su nombre completo">
+                <span class="error-message">Este campo es obligatorio.</span>
+
+                <label for="rol">Rol:</label>
+                <select id="rol" name="rol" required data-tippy-content="Seleccione su rol">
+                    <option value="">Seleccione una opción</option>
+                    <option value="Publicador">Publicador</option>
+                    <option value="Precursor Auxiliar">Precursor Auxiliar</option>
+                    <option value="Precursor Regular">Precursor Regular</option>
+                </select>
+                <span class="error-message">Este campo es obligatorio.</span>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="next-btn" onclick="nextStep()">Siguiente</button>
+                </div>
+            </div>
+
+            <div class="form-step">
+                <label for="horas">Número de Horas:</label>
+                <input type="number" id="hours" name="numero-horas" placeholder="Número de horas" required data-tippy-content="Si es publicador coloque 0 horas">
+                <span class="error-message">Este campo es obligatorio.</span>
+
+                <label for="cursosBiblicos">Número de Cursos Bíblicos:</label>
+                <input type="number" id="bibleCourse" name="cursoBiblicos" placeholder="Número de cursos bíblicos" required data-tippy-content="Ingrese el número de cursos bíblicos">
+                <span class="error-message">Este campo es obligatorio.</span>
+
+                <label>Participó en alguna faceta de la predicación durante el mes:</label>
+                <div>
+                    <button type="button" class="yes" onclick="setParticipacion(true)" data-tippy-content="Seleccione 'Sí' si participó">Sí</button>
+                    <button type="button" class="no" onclick="setParticipacion(false)" data-tippy-content="Seleccione 'No' si no participó">No</button>
+                </div>
+                <input type="hidden" id="participacion" name="participacion">
+                <span class="error-message">Debes seleccionar una opción.</span>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="prev-btn" onclick="prevStep()">Anterior</button>
+                    <button type="button" class="next-btn" onclick="nextStep()">Siguiente</button>
+                </div>
+            </div>
+
+            <div class="form-step">
+                <label for="superintendente">Superintendente de Servicio:</label>
+                <select id="superintendente" name="superintendente" required data-tippy-content="Seleccione su superintendente">
+                    <option value="">Seleccione una opción</option>
+                    <option value="Alfonso.P Grupo 1">Alfonso.P Grupo 1</option>
+                    <option value="Rafael.G Grupo 2">Rafael.G Grupo 2</option>
+                    <option value="Alberto.G Grupo 3">Alberto.G Grupo 3</option>
+                    <option value="Josue.T Grupo 4">Josue.T Grupo 4</option>
+                    <option value="David.N Grupo 5">David.N Grupo 5</option>
+                </select>
+                <span class="error-message">Este campo es obligatorio.</span>
+
+                <label for="notes">Notas:</label>
+                <textarea id="notes" name="notes" placeholder="Escriba sus notas aquí" data-tippy-content="Ingrese sus notas"></textarea>
+                <span class="error-message"></span>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="prev-btn" onclick="prevStep()">Anterior</button>
+                    <button type="submit">Enviar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/JS/pasoapaso.js"></script>
+
+    <!-- ESTA PARTE DEL CODIGO NO SE MODIFICA PARA LA GUIA PASO A PASO DEL ENVIO DEL INFORME-->
+    <div class="footer">
+        <div class="left-footer">
+            <img src="/img/favicon.ico" alt="Logo">
+            <span>Congregación Piñones</span>
+        </div>
+        <div class="right-footer">
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">
+                <img alt="Licencia Creative Commons" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+            </a>
+            <p>Esta obra está bajo una <br>
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional</a>.
+            </p>
+        </div>
+    </div>
+    
+
+    <div class="banner" id="info-banner">
+        <h2>Información sobre la página</h2>
+        <p>Este sitio web ha sido desarrollado con la intención de servir a la comunidad de manera gratuita y sin fines de lucro. Fue creado como respuesta a una necesidad en la congregación piñones, con el objetivo de facilitar la comunicación y la difusión de información relevante.</p>
+        <p>Además, se ha trabajado para garantizar la seguridad de la información y la privacidad de los usuarios. Este sitio web es un ejemplo del poder que tiene la tecnología para facilitar la colaboración y la comunicación.</p>
+        <h3>Desarrollado por Leonardo Gonzalez</h3>
+        <h3>Todos los derechos reservados &copy; 2023 | Leonardo Gonzalez</h3>
+        <h3>Congregacion Piñones</h3>
+        <button class="close-btn" id="close-banner"><i class="fas fa-door-closed"></i></button>
+    </div>
+
+    <script src="/JS/participo.js"></script>
+
+    <script src="/JS/activarmododark.js"></script>
+
+    <script src="/JS/banner.js"></script>
+
+    <!--Actualizacion del mes automatizada-->
+    <script src="/JS/actualizacionMes.js"></script>
+      
+    <script src="/JS/guidedForm.js"></script> <!-- Envia el formulario guiado a la base de datos-->
+    
+    <!-- Publicador -->
+   <script src="/JS/publicadors.js"></script>
+    <!-- Precursor Regular -->
+    <script src="/JS/precursorRegular.js"></script>
+    
+    <!-- Precursor Auxiliar-->
+    <script src="/JS/precursosrAuxiliar.js"></script>
+</body>
+</html>

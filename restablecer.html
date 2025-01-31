@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administracion Piñones</title>
+  <link rel="icon" href="img/favicon.ico">
+  <script src="https://kit.fontawesome.com/8dca05f736.js"></script>
+    <!-- Librería de iconos -->
+    <script src="https://kit.fontawesome.com/your_kit_id.js"></script>
+  <!-- CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!--Se supone que sirve-->
+    
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-auth.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <script src="JS/bloqueo.js"></script>
+
+      <style>
+        body.dark-mode {
+        background-color: #343a40;
+        color: #fff;
+          }
+
+      body.dark-mode .card {
+        background-color: #212529;
+        color: #fff;
+      }
+
+        .card{
+          margin-top:180px;
+        }
+      </style>
+
+      <!--MODO OSCURO-->
+    <script>
+      // Función para habilitar el modo oscuro
+      function enableDarkMode() {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      }
+    
+      // Función para deshabilitar el modo oscuro
+      function disableDarkMode() {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    
+      // Verificar el tema almacenado en localStorage
+      var storedTheme = localStorage.getItem('theme');
+      if (storedTheme === 'dark') {
+        enableDarkMode();
+      }
+    
+      // Evento de cambio de tema
+      function toggleDarkMode() {
+        if (document.body.classList.contains('dark-mode')) {
+          disableDarkMode();
+        } else {
+          enableDarkMode();
+        }
+      }
+    </script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+          <!-- Menú lateral -->
+          <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="/cards.html"><img src="ADMI/favicon.ico" height="35px"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                <a class="nav-link" href="/cards.html">
+                    <i class="fas fa-home mr-2"></i>
+                    Inicio
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/informes.html">
+                  <i class="fas fa-book mr-2"></i>
+                    Informes
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/historial.html">
+                    <i class="fas fa-history mr-2"></i>
+                    Historial
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link active" href="/cuenta.html">
+                    <i class="fas fa-question mr-2"></i>
+                   Ayuda
+                </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/estadisticas.html">
+                    <i class="fas fa-project-diagram mr-2"></i>
+                     Estadisticas
+                  </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <button id="cambiar-tema" class="nav-link btn btn-link" onclick="toggleDarkMode()">
+                      <i class="fas fa-adjust mr-2"></i>
+                      Cambiar tema
+                    </button>
+                  </li>
+  
+               
+               
+            </ul>
+            </div>
+        </nav>
+        <script>
+            // Agregar la clase "show" al menú al hacer clic en el botón de hamburguesa
+            document.querySelector(".navbar-toggler").addEventListener("click", function() {
+            document.querySelector("#navbarCollapse").classList.toggle("show");
+            });
+        </script>
+        <!-- Contenido principal -->
+        <div class="container mt-5">
+            <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Restablecer Contraseña</h2>
+                    <form id="reset-form">
+                    <div class="form-group">
+                      <label for="email">Correo electrónico:</label>
+                      <input type="email" class="form-control" placeholder="Introduzca su correo electrónico" id="email" name="email" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-block">Restablecer</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!--Fin del contenido principal-->
+    </div>
+  </div>
+
+    <!--almacenar opcion de color-->
+    <script>
+      // Evento de carga de la página
+      document.addEventListener('DOMContentLoaded', function() {
+        // Verificar el tema almacenado
+        var storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+          document.body.classList.add('dark-mode');
+        }
+      });
+    </script>
+    
+
+  <script src="restablecer.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+body{
+	font-family: 'Ubuntu', sans-serif;
+
+}
+
+#login-btn {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	padding: 10px 20px;
+	background-color: #2196F3;
+	color: #fff;
+	border: none;
+	border-radius: 15px;
+	cursor: pointer;
+	font-family: 'Dongle', sans-serif;
+}
+
+#form-container {
+	margin: 100px auto;
+	padding: 20px;
+	background-color: #f2f2f2;
+	border-radius: 25px;
+	border: 1px solid #ccc;
+	width: 500px;
+
+}
+
+
+
+h2 {
+	text-align: center;
+	margin-bottom: 30px;
+
+}
+h3{
+	text-align: center;
+	margin-bottom: 5px;
+	font-family: 'Ysabeau', sans-serif;
+}
+
+p{
+	text-align: justify;
+	margin-bottom: 8px;
+}
+
+form label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+form input, form select {
+	display: block;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 15px;
+	width: 100%;
+	box-sizing: border-box;
+	margin-bottom: 20px;
+	text-align: center;
+}
+	textarea {
+	font-family: 'Dongle', sans-serif;
+	font-size: 18px;
+	width: 100%;
+ }
+
+#submit-btn{
+	margin-top: 10px;
+	padding: 10px 20px;
+	background-color: #2196F3;
+	color: #fff;
+	border: none;
+	border-radius: 15px;
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+#clear-btn {
+	margin-top: 10px;
+	padding: 10px 20px;
+	background-color: #f3f33ee1;
+	color: #000000;
+	border: none;
+	border-radius: 15px;
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+#clear-btn:hover{
+	background-color: #bf2a2a;
+	color: #ffff;
+}
+#submit-btn:hover{
+	background-color: #3EB489;
+}
+#info-icon-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+#info-icon-container i {
+    font-size: 24px;
+}
+
+#info-container {
+	font-family: 'Dongle', sans-serif;
+    position: absolute;
+    top: 60px;
+	right: 8px;
+	left: -300px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: none;
+
+}
+
+#info-container h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+#info-container p {
+    margin-bottom: 0;
+}
+
+.table-responsive{
+	margin-top: 150px;
+}
+
+@media screen and (max-width: 640px) {
+	#form-container {
+	  margin: 50px auto; /* ajustar el margen superior */
+	  width: 90%; /* ajustar el ancho del contenedor */
+	}
+	
+	form input, form select {
+	  font-size: 16px; /* ajustar el tamaño de fuente de los inputs */
+	}
+	
+	#login-btn {
+	  top: 10px; /* ajustar la posición del botón de login */
+	  left: 10px;
+	  padding: 6px 12px; /* ajustar el padding del botón */
+	  font-size: 14px; /* ajustar el tamaño de fuente del botón */
+	}
+	
+	#submit-btn, #clear-btn {
+	  padding: 8px 16px; /* ajustar el padding de los botones */
+	  font-size: 16px; /* ajustar el tamaño de fuente de los botones */
+	}
+  }
