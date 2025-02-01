@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administracion Piñones</title>
+  <link rel="icon" href="img/favicon.ico">
+  <script src="https://kit.fontawesome.com/8dca05f736.js"></script>
+  <!-- CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+  <!--Firebase-->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+
+  <style>
+    /* Estilos generales de sección */
+    .section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    /* Estilos para los encabezados principales */
+    .section h2 {
+      background-color: #1a237e;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: -20px -20px 20px -20px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    /* Estilos para las secciones principales */
+    .section-header {
+      color: white;
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    .tesoros-header {
+      background-color: #575B5C;
+    }
+
+    .maestros-header {
+      background-color: #BF7E04;
+    }
+
+    .vida-header {
+      background-color: #73022C;
+    }
+
+    /* Estilos para las subsecciones */
+    .subsection {
+      background-color: #f5f5f5;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border-left: 4px solid;
+    }
+
+    .tesoros-subsection {
+      border-left-color: #575B5C;
+    }
+
+    .maestros-subsection {
+      border-left-color: #BF7E04;
+    }
+
+    .vida-subsection {
+      border-left-color: #73022C;
+    }
+
+    /* Estilos para los botones de navegación */
+    .navigation-buttons {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .navigation-buttons button {
+      background-color: #1a237e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .navigation-buttons button:hover {
+      background-color: #283593;
+    }
+
+    .navigation-buttons button:disabled {
+      background-color: #9fa8da;
+      cursor: not-allowed;
+    }
+
+    body.dark-mode {
+        background-color: #343a40;
+        color: #fff;
+      }
+
+      body.dark-mode .card {
+        background-color: #212529;
+        color: #fff;
+      }
+    /* Modo oscuro */
+    body.dark-mode .section {
+      background-color: #1a1a1a;
+
+    }
+
+    body.dark-mode .subsection {
+      background-color: #2d2d2d;
+    }
+
+    body.dark-mode .navigation-buttons {
+      background-color: #2d2d2d;
+    }
+    .btn-primary {
+  background-color: #1a237e;
+  border-color: #1a237e;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+  </style>
+
+  <!--Configuracion de Script de logueo-->
+  <script src="firebase-config.js"></script>
+
+  <!--script de verificacion de logueo-->
+  <script>
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (!user) {
+        // Usuario no autenticado, redirigir a la página de inicio de sesión
+        window.location.href = '/yetilogin/indexyeti.html';
+      }
+    });
+
+    function logout() {
+      firebase.auth().signOut()
+        .then(() => {
+          // Cierre de sesión exitoso
+          console.log('Cierre de sesión exitoso');
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Sesión cerrada con éxito',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            setTimeout(function () {
+              window.location.href = '/yetilogin/indexyeti.html';
+            }, 2000); // Esperar 2 segundos antes de redirigir
+          });
+        })
+        .catch((error) => {
+          // Ocurrió un error durante el cierre de sesión
+          console.log('Error en el cierre de sesión:', error.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error en el cierre de sesión',
+            text: error.message
+          });
+        });
+    }
+  </script>
+
+  <!--MODO OSCURO-->
+  <script>
+    // Función para habilitar el modo oscuro
+    function enableDarkMode() {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Función para deshabilitar el modo oscuro
+    function disableDarkMode() {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
+    }
+
+    // Verificar el tema almacenado en localStorage
+    var storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      enableDarkMode();
+    }
+
+    // Evento de cambio de tema
+    function toggleDarkMode() {
+      if (document.body.classList.contains('dark-mode')) {
+        disableDarkMode();
+      } else {
+        enableDarkMode();
+      }
+    }
+  </script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Menú lateral -->
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/cards.html"><img src="ADMI/favicon.ico" height="35px"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/cards.html">
+                <i class="fas fa-home mr-2"></i>
+                Inicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/informes.html">
+                <i class="fas fa-book mr-2"></i>
+                Informes
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/asignaciones.html">
+                <i class="fas fa-history mr-2"></i>
+                Asignaciones
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cuenta.html">
+                <i class="fas fa-question mr-2"></i>
+                Ayuda
+              </a>
+            </li>
+            <!-- botón de cerrar sesión actualizado-->
+            <li class="nav-item">
+              <button id="cerrar-sesion" class="nav-link btn btn-link" onclick="logout()">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Cerrar sesión
+              </button>
+            </li>
+
+            <li class="nav-item">
+              <button id="cambiar-tema" class="nav-link btn btn-link" onclick="toggleDarkMode()">
+                <i class="fas fa-adjust mr-2"></i>
+                Cambiar tema
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <script>
+        // Agregar la clase "show" al menú al hacer clic en el botón de hamburguesa
+        document.querySelector(".navbar-toggler").addEventListener("click", function () {
+          document.querySelector("#navbarCollapse").classList.toggle("show");
+        });
+      </script>
+
+      <!-- Contenido principal -->
+      <div class="container mt-5" style="padding-top: 20px;">
+        <div class="row">
+          <div class="col-12">
+            <!-- Botones de navegación -->
+            <div class="navigation-buttons">
+              <button id="prev-button" onclick="prevSection()">Anterior</button>
+              <button id="next-button" onclick="nextSection()">Siguiente</button>
+              <button id="save-button" class="btn btn-primary">Guardar Cambios</button>
+              <button id="notify-button" class="btn btn-secondary">Notificar</button>
+              <a href="/gruposdeservicio.html" class="btn btn-primary">Grupos de Servicios</a>
+            </div>
+
+            <!-- Secciones de semanas -->
+            <div id="weeks-view">
+              <!-- 09 de Enero -->
+              <div class="section" id="section-1">
+                <h2 contenteditable="true">09 DE ENERO | LECTURA SEMANAL DE LA BIBLIA SALMOS 127 - 134</h2>
+                <p><strong>Presidente:</strong> <span contenteditable="true">David Novoa</span></p>
+                
+                <!-- Tesoros de la Biblia -->
+                <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+                <div class="subsection tesoros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Padres, sigan cuidando la herencia que Jehová les dio (10 mins.) - Rafael Gomez</span></li>
+                    <li><span contenteditable="true">Busquemos perlas escondidas (10 mins.) - Josue Tellez</span></li>
+                    <li><span contenteditable="true">Lectura de la Biblia (4 mins.) - Javier Valencia</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Seamos Mejores Maestros -->
+                <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+                <div class="subsection maestros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Empiece conv. Predicación Informal (3 mins.) - Rocio Gonzalez, Martha de Ochoa</span></li>
+                    <li><span contenteditable="true">Empiece conv. Predicación Informal (4 mins.) - Mireya de Diaz, Irma de Cruz</span></li>
+                    <li><span contenteditable="true">Haga discípulos (5 mins.) - Marisol de Hernandez, Nieves de Piña</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Nuestra Vida Cristiana -->
+                <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+                <div class="subsection vida-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Canción 13</span></li>
+                    <li><span contenteditable="true">Padres, ¿están usando esta herramienta tan potente? (15 mins.) - Alberto Pacheco</span></li>
+                    <li><span contenteditable="true">Estudio bíblico de la congregación (30 mins.) - Mario Barrios, Marco A. Hernandez</span></li>
+                    <li><span contenteditable="true">Palabras de conclusión (3 mins.) - David Novoa</span></li>
+                    <li><span contenteditable="true">Canción 73</span></li>
+                    <li><span contenteditable="true">Oración final - Alfonso Piña</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 16 de Enero -->
+              <div class="section" id="section-2">
+                <h2 contenteditable="true">16 DE ENERO | LECTURA SEMANAL DE LA BIBLIA SALMOS 135 - 137</h2>
+                <p><strong>Presidente:</strong> <span contenteditable="true">Alberto Pacheco</span></p>
+                
+                <!-- Tesoros de la Biblia -->
+                <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+                <div class="subsection tesoros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Nuestro señor es más grande que todos los dioses (10 mins.) - Rafael Gomez</span></li>
+                    <li><span contenteditable="true">Busquemos perlas escondidas (10 mins.) - David Novoa</span></li>
+                    <li><span contenteditable="true">Lectura de la Biblia (4 mins.) - Jesus Alexander Gonzalez</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Seamos Mejores Maestros -->
+                <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+                <div class="subsection maestros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Empiece conv. Predicación Informal (3 mins.) - Norm A. de Lopez, Rosario Ovalle</span></li>
+                    <li><span contenteditable="true">Haga revisitas. De casa en casa (4 mins.) - Bertha Cruz, Mariela de Gomez</span></li>
+                    <li><span contenteditable="true">Explique sus creencias (5 mins.) - Clara Morales, Liliana de Nevarez</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Nuestra Vida Cristiana -->
+                <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+                <div class="subsection vida-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Canción 10</span></li>
+                    <li><span contenteditable="true">Necesidades de la congregación (15 mins.) - Josue Tellez</span></li>
+                    <li><span contenteditable="true">Estudio bíblico de la congregación (30 mins.) - Leonardo Gonzalez, Alfonso Piña</span></li>
+                    <li><span contenteditable="true">Palabras de conclusión (3 mins.) - Alberto Pacheco</span></li>
+                    <li><span contenteditable="true">Canción 90</span></li>
+                    <li><span contenteditable="true">Oración final - Mario Barrios</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 23 de Enero -->
+              <div class="section" id="section-3">
+                <h2 contenteditable="true">23 DE ENERO | LECTURA SEMANAL DE LA BIBLIA SALMOS 138, 139</h2>
+                <p><strong>Presidente:</strong> <span contenteditable="true">Josue Tellez</span></p>
+                
+                <!-- Tesoros de la Biblia -->
+                <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+                <div class="subsection tesoros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Que los nervios no lo frenen (10 mins.) - Alberto Pacheco</span></li>
+                    <li><span contenteditable="true">Busquemos perlas escondidas (10 mins.) - Israel Nevarez</span></li>
+                    <li><span contenteditable="true">Lectura de la Biblia (4 mins.) - Moises Vazquez</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Seamos Mejores Maestros -->
+                <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+                <div class="subsection maestros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Empiece conv. Predicación pública (3 mins.) - Daniela de Gomez, Arantxa Aracen</span></li>
+                    <li><span contenteditable="true">Haga discípulos. Predicación pública (4 mins.) - Dinora Gaytan, Vania de Roa</span></li>
+                    <li><span contenteditable="true">Discurso (5 mins.) - Azarel Roa</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Nuestra Vida Cristiana -->
+                <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+                <div class="subsection vida-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Canción 59</span></li>
+                    <li><span contenteditable="true">Aunque sea tímido, puede tener éxito sirviendo a Jehova (15 mins.) - Rafael Gomez</span></li>
+                    <li><span contenteditable="true">Estudio bíblico de la congregación (30 mins.) - Sergio Ochoa, David Novoa</span></li>
+                    <li><span contenteditable="true">Palabras de conclusión (3 mins.) - Josue Tellez</span></li>
+                    <li><span contenteditable="true">Canción 151</span></li>
+                    <li><span contenteditable="true">Oración final - Gabriel Diaz</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 30 de Enero -->
+              <div class="section" id="section-4">
+                <h2 contenteditable="true">30 DE ENERO | LECTURA SEMANAL DE LA BIBLIA SALMOS 140 - 143</h2>
+                <p><strong>Presidente:</strong> <span contenteditable="true">Alfonso Piña</span></p>
+                
+                <!-- Tesoros de la Biblia -->
+                <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+                <div class="subsection tesoros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">¿Qué hará después de orar? (10 mins.) - David Novoa</span></li>
+                    <li><span contenteditable="true">Busquemos perlas escondidas (10 mins.) - Gabriel Diaz</span></li>
+                    <li><span contenteditable="true">Lectura de la Biblia (4 mins.) - Samuel Cruz</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Seamos Mejores Maestros -->
+                <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+                <div class="subsection maestros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Empiece conv. Predicación informal (4 mins.) - Marisol Cortez, Estela de Silva</span></li>
+                    <li><span contenteditable="true">Haga revisitas. Predicación pública (3 mins.) - Lourdes de Herrera, Mercedes de Escalante</span></li>
+                    <li><span contenteditable="true">Explique sus creencias (5 mins.) - Nicole Herrera, Griselda de Vazquez</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Nuestra Vida Cristiana -->
+                <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+                <div class="subsection vida-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Canción 141</span></li>
+                    <li><span contenteditable="true">Está preparado por si necesita atención médica o una intervención quirúrgica (15 mins.) - Rafael Gomez</span></li>
+                    <li><span contenteditable="true">Estudio bíblico de la congregación (30 mins.) - Israel Nevarez, Mario Barrios</span></li>
+                    <li><span contenteditable="true">Palabras de conclusión (3 mins.) - Alfonso Piña</span></li>
+                    <li><span contenteditable="true">Canción 103</span></li>
+                    <li><span contenteditable="true">Oración final - Alberto Pacheco</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- 4 de Febrero -->
+              <div class="section" id="section-5">
+                <h2 contenteditable="true">4 DE FEBRERO | LECTURA SEMANAL DE LA BIBLIA SALMOS 144 - 146</h2>
+                <h3 contenteditable="true"> Visita del Superintendente - Jaime Vazquez</h3>
+                <p><strong>Presidente:</strong> <span contenteditable="true">Rafael Gomez</span></p>
+                
+                <!-- Tesoros de la Biblia -->
+                <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+                <div class="subsection tesoros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">“¡Feliz el pueblo que tiene por Dios a Jehová!” (10 mins.) - Josue Tellez</span></li>
+                    <li><span contenteditable="true">Busquemos perlas escondidas (10 mins.) - Alfonso Piña</span></li>
+                    <li><span contenteditable="true">Lectura de la Biblia (4 mins.) - Sergio Ochoa</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Seamos Mejores Maestros -->
+                <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+                <div class="subsection maestros-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Empiece conv. De casa en casa (4 mins.) - Adriana de Gonzalez, Karina Alfaro</span></li>
+                    <li><span contenteditable="true">Haga revisitas. Predicación informal (4 mins.) - Elizabeth de Barrios, Betzayin de Tellez</span></li>
+                    <li><span contenteditable="true">Discurso (4 mins.) - Leonardo Gonzalez</span></li>
+                  </ul>
+                </div>
+                
+                <!-- Nuestra Vida Cristiana -->
+                <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+                <div class="subsection vida-subsection">
+                  <ul>
+                    <li><span contenteditable="true">Canción 59</span></li>
+                    <li><span contenteditable="true">Jehova quiere que usted sea feliz (10 mins.) - Marco A. Hernandez</span></li>
+                    <li><span contenteditable="true">Necesidades de la congregación (5 mins.) - Alberto Pacheco</span></li>
+                    <li><span contenteditable="true">Discurso de servicio (30 mins.) - Jaime Vazquez</span></li>
+                    <li><span contenteditable="true">Palabras de conclusión (3 mins.) - Rafael Gomez</span></li>
+                    <li><span contenteditable="true">Canción 85</span></li>
+                    <li><span contenteditable="true">Oración final - Jaime Vazquez</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+      <!-- Librería de iconos -->
+      <script src="https://kit.fontawesome.com/your_kit_id.js"></script>
+
+      <script>
+        document.getElementById('cerrar-sesion').addEventListener('click', function (event) {
+          event.preventDefault();
+          Swal.fire({
+            icon: 'success',
+            title: 'Sesión cerrada con éxito',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(function () {
+            window.location.href = '/login.html';
+          });
+        });
+      </script>
+
+      <!--almacenar opcion de color-->
+      <script>
+        // Evento de carga de la página
+        document.addEventListener('DOMContentLoaded', function () {
+          // Verificar el tema almacenado
+          var storedTheme = localStorage.getItem('theme');
+          if (storedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+          }
+        });
+      </script>
+      <script>
+        // Inicializa Firestore
+        const db = firebase.firestore();
+
+        let currentSection = 1;
+        const totalSections = 5;
+
+       // Función para guardar las asignaciones
+function saveAssignments(sectionId) {
+  const section = document.getElementById(sectionId);
+  const data = {
+    title: section.querySelector('h2').innerText,
+    h3: section.querySelector('h3') ? section.querySelector('h3').innerText : '', // Extrae el valor del h3 si existe
+    president: section.querySelector('p span').innerText, // Extrae el valor del presidente
+    tesoros: Array.from(section.querySelectorAll('.tesoros-subsection span')).map(span => span.innerText),
+    maestros: Array.from(section.querySelectorAll('.maestros-subsection span')).map(span => span.innerText),
+    vida: Array.from(section.querySelectorAll('.vida-subsection span')).map(span => span.innerText)
+  };
+
+  return db.collection('assignments').doc(sectionId).set(data)
+    .then(() => {
+      console.log('Asignaciones guardadas correctamente');
+      Swal.fire('Guardado', 'Las asignaciones se han guardado correctamente', 'success');
+    })
+    .catch((error) => {
+      console.error('Error al guardar las asignaciones: ', error);
+      Swal.fire('Error', 'Hubo un error al guardar las asignaciones', 'error');
+    });
+}
+
+// Función para cargar las asignaciones
+function loadAssignments(sectionId) {
+  db.collection('assignments').doc(sectionId).get()
+    .then((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        const section = document.getElementById(sectionId);
+        section.querySelector('h2').innerText = data.title;
+        if (section.querySelector('h3')) {
+          section.querySelector('h3').innerText = data.h3 || ''; // Carga el valor del h3 si existe
+        }
+        section.querySelector('p span').innerText = data.president; // Carga el valor del presidente
+        section.querySelectorAll('.tesoros-subsection span').forEach((span, index) => {
+          span.innerText = data.tesoros[index];
+        });
+        section.querySelectorAll('.maestros-subsection span').forEach((span, index) => {
+          span.innerText = data.maestros[index];
+        });
+        section.querySelectorAll('.vida-subsection span').forEach((span, index) => {
+          span.innerText = data.vida[index];
+        });
+      } else {
+        console.log('No se encontraron asignaciones guardadas');
+      }
+    })
+    .catch((error) => {
+      console.error('Error al cargar las asignaciones: ', error);
+    });
+}
+        // Función para verificar si todas las secciones están completas
+        function checkProgramCompletion() {
+          let completedSections = 0;
+
+          for (let i = 1; i <= totalSections; i++) {
+            db.collection('assignments').doc(`section-${i}`).get()
+              .then((doc) => {
+                if (doc.exists) {
+                  completedSections++;
+                }
+
+                // Si todas las secciones están completas, mostrar notificación
+                if (completedSections === totalSections) {
+                  showBrowserNotification(
+                    "Programa Completo",
+                    "Todas las asignaciones están listas para ser revisadas."
+                  );
+                } else {
+                  Swal.fire({
+                    icon: 'info',
+                    title: 'Programa Incompleto',
+                    text: 'Aún hay secciones sin completar.',
+                    confirmButtonText: 'Aceptar'
+                  });
+                }
+              })
+              .catch((error) => {
+                console.error('Error al verificar la sección:', error);
+              });
+          }
+        }
+
+        // Función para mostrar una notificación del navegador
+        function showBrowserNotification(title, message) {
+          if (Notification.permission === "granted") {
+            new Notification(title, {
+              body: message,
+              icon: "img/favicon.ico", // Icono de la notificación
+            });
+          } else {
+            console.log("No se pueden mostrar notificaciones: permisos no concedidos.");
+          }
+        }
+
+        // Solicitar permisos para notificaciones
+        function requestNotificationPermission() {
+          if (Notification.permission !== "granted") {
+            Notification.requestPermission().then(permission => {
+              if (permission === "granted") {
+                console.log("Permisos para notificaciones concedidos.");
+              } else {
+                console.log("Permisos para notificaciones denegados.");
+              }
+            });
+          }
+        }
+
+        // Función para mostrar la sección actual
+        function showSection(sectionNumber) {
+          currentSection = sectionNumber;
+          document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+            section.style.display = 'none';
+          });
+
+          const currentSectionEl = document.getElementById(`section-${sectionNumber}`);
+          currentSectionEl.classList.add('active');
+          currentSectionEl.style.display = 'block';
+
+          document.getElementById('prev-button').disabled = currentSection <= 1;
+          document.getElementById('next-button').disabled = currentSection >= totalSections;
+
+          loadAssignments(`section-${sectionNumber}`);
+        }
+
+        // Evento para guardar las asignaciones
+        document.getElementById('save-button').addEventListener('click', () => {
+          saveAssignments(`section-${currentSection}`);
+        });
+
+        // Evento para el botón de notificar
+        document.getElementById('notify-button').addEventListener('click', () => {
+          checkProgramCompletion();
+        });
+
+        // Cargar las asignaciones al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+          showSection(1);
+          requestNotificationPermission(); // Solicitar permisos para notificaciones
+        });
+
+        // Funciones para navegar entre secciones
+        function nextSection() {
+          if (currentSection < totalSections) {
+            currentSection++;
+            showSection(currentSection);
+          }
+        }
+
+        function prevSection() {
+          if (currentSection > 1) {
+            currentSection--;
+            showSection(currentSection);
+          }
+        }
+      </script>
+    </div>
+  </div>
+</body>
+</html>

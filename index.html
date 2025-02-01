@@ -9,7 +9,7 @@
     <!--FIREBASE-->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-	<!--ALERTAS POP-UP-->
+    <!--ALERTAS POP-UP-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -21,18 +21,24 @@
     <script src="/JS/systemResponsive.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6.3.1/dist/tippy-bundle.umd.min.js"></script>
-  
 </head>
 <body>
     <script src="/JS/ayudaAviso.js"></script>
         
     <div class="navbar">
+        <!-- Botón para abrir/cerrar el menú lateral en móviles -->
+        <button id="menu-toggle" class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
         <div class="left-menu">
             <div class="slider" id="dark-mode-toggle">
                 <i class="fas fa-sun sun"></i>
                 <i class="fas fa-moon moon"></i>
                 <div class="thumb"></div>
             </div>
+            <!-- Nuevas opciones agregadas aquí -->
+            <a href="/AsignacionesS.html" id="asignaciones"><i class="fas fa-tasks"></i> Asignaciones</a>
+            <a href="/gruposdeservicioviz.html" id="grupos-servicio"><i class="fas fa-users"></i> Grupos de Servicio</a>
         </div>
         <div class="right-menu">
             <a href="/yetilogin/indexyeti.html" id="login"><i class="fas fa-user-alt"></i></a>
@@ -40,8 +46,11 @@
         </div>
     </div>
     
+    <!-- Overlay para cerrar el menú lateral -->
+    <div class="overlay"></div>
+    
     <div class="container" id="form-container">
-        <h1 id="form-title">Informes mes de <span id="current-month"></span> 2024</h1>
+        <h1 id="form-title">Informes mes de <span id="current-month"></span> 2025</h1>
         <form id="report-form" onsubmit="validateForm(event)">
             <label for="nombre-completo">Nombre Completo:</label>
             <input type="text" id="nombre-completo" name="nombre-completo" placeholder="Nombre completo" required>
@@ -102,7 +111,6 @@
         </div>
     </div>
     
-  
     <div class="banner" id="info-banner">
         <h2>Información sobre la página</h2>
         <p>Este sitio web ha sido desarrollado con la intención de servir a la comunidad de manera gratuita y sin fines de lucro. Fue creado como respuesta a una necesidad en la congregación piñones, con el objetivo de facilitar la comunicación y la difusión de información relevante.</p>
@@ -132,5 +140,6 @@
     
     <!-- Precursor Auxiliar-->
     <script src="/JS/precursosrAuxiliar.js"></script>
+    <script src="/JS/menulateral.js"></script>
 </body>
 </html>

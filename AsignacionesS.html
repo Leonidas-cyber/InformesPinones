@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congregacion Pinones</title>
+    <!--FAVICON-->
+    <link rel="icon" href="/img/favicon.ico">
+    <!--FIREBASE-->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!--ALERTAS POP-UP-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!--VALIDACION-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <!--Estilo nuevo-->
+    <link rel="stylesheet" href="/CSS/indexnew.css">
+    <script src="/JS/systemResponsive.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6.3.1/dist/tippy-bundle.umd.min.js"></script>
+    <style>
+      /* Estilos generales de sección */
+    .section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    /* Estilos para los encabezados principales */
+    .section h2 {
+      background-color: #1a237e;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: -20px -20px 20px -20px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    /* Estilos para las secciones principales */
+    .section-header {
+      color: white;
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    .tesoros-header {
+      background-color: #575B5C;
+    }
+
+    .maestros-header {
+      background-color: #BF7E04;
+    }
+
+    .vida-header {
+      background-color: #73022C;
+    }
+
+    /* Estilos para las subsecciones */
+    .subsection {
+      background-color: #f5f5f5;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border-left: 4px solid;
+    }
+
+    .tesoros-subsection {
+      border-left-color: #575B5C;
+    }
+
+    .maestros-subsection {
+      border-left-color: #BF7E04;
+    }
+
+    .vida-subsection {
+      border-left-color: #73022C;
+    }
+
+    /* Estilos para los botones de navegación */
+    .navigation-buttons {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .navigation-buttons button {
+      background-color: #1a237e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .navigation-buttons button:hover {
+      background-color: #283593;
+    }
+
+    .navigation-buttons button:disabled {
+      background-color: #9fa8da;
+      cursor: not-allowed;
+    }
+
+    body.dark-mode {
+        background-color: #343a40;
+        color: #fff;
+      }
+
+      body.dark-mode .card {
+        background-color: #212529;
+        color: #fff;
+      }
+    /* Modo oscuro */
+    body.dark-mode .section {
+      background-color: #1a1a1a;
+
+    }
+
+    body.dark-mode .subsection {
+      background-color: #2d2d2d;
+    }
+
+    body.dark-mode .navigation-buttons {
+      background-color: #2d2d2d;
+    }
+    .btn-primary {
+  background-color: #1a237e;
+  border-color: #1a237e;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+      </style>
+      <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+      <script src="firebase-config.js"></script>
+</head>
+<body>
+        
+    <div class="navbar">
+      <!-- Botón para abrir/cerrar el menú lateral en móviles -->
+      <button id="menu-toggle" class="menu-toggle">
+          <i class="fas fa-bars"></i>
+      </button>
+      <div class="left-menu">
+          <div class="slider" id="dark-mode-toggle">
+              <i class="fas fa-sun sun"></i>
+              <i class="fas fa-moon moon"></i>
+              <div class="thumb"></div>
+          </div>
+          <!-- Nuevas opciones agregadas aquí -->
+          <a href="/index.html" id="asignaciones"><i class="fas fa-tasks"></i>Formulario</a>
+          <a href="/gruposdeservicioviz.html" id="grupos-servicio"><i class="fas fa-users"></i> Grupos de Servicio</a>
+      </div>
+      <div class="right-menu">
+          <a href="/yetilogin/indexyeti.html" id="login"><i class="fas fa-user-alt"></i></a>
+          <a href="#" id="info"><i class="fas fa-info-circle"></i></a>
+      </div>
+  </div>
+  
+  <!-- Overlay para cerrar el menú lateral -->
+  <div class="overlay"></div>
+    <!--Contenido de Base de Datos-->
+    <div class="container mt-5">
+        <div class="row">
+          <div class="col-12">
+            <div id="weeks-view"></div>
+          </div>
+        </div>
+      </div>
+    
+      <script>
+        const db = firebase.firestore();
+    
+        function loadAssignments() {
+          db.collection('assignments').get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              const section = document.createElement('div');
+              section.className = 'section';
+              section.id = doc.id;
+    
+              section.innerHTML = `
+                <h2>${data.title}</h2>
+                <h3>${data.h3}</h3>
+                <p><strong>Presidente:</strong> ${data.president}</p>
+                <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+                <div class="subsection tesoros-subsection">
+                  <ul>
+                    ${data.tesoros.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+                <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+                <div class="subsection maestros-subsection">
+                  <ul>
+                    ${data.maestros.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+                <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+                <div class="subsection vida-subsection">
+                  <ul>
+                    ${data.vida.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              `;
+    
+              document.getElementById('weeks-view').appendChild(section);
+            });
+          }).catch((error) => {
+            console.error('Error al cargar las asignaciones: ', error);
+          });
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+          loadAssignments();
+        });
+      </script>
+    
+    
+    <div class="footer">
+        <div class="left-footer">
+            <img src="/img/favicon.ico" alt="Logo">
+            <span>Congregación Piñones</span>
+        </div>
+        <div class="right-footer">
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">
+                <img alt="Licencia Creative Commons" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png">
+            </a>
+            <p>Esta obra está bajo una <br>
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional</a>.
+            </p>
+        </div>
+    </div>
+    
+    <div class="banner" id="info-banner">
+        <h2>Información sobre la página</h2>
+        <p>Este sitio web ha sido desarrollado con la intención de servir a la comunidad de manera gratuita y sin fines de lucro. Fue creado como respuesta a una necesidad en la congregación piñones, con el objetivo de facilitar la comunicación y la difusión de información relevante.</p>
+        <p>Además, se ha trabajado para garantizar la seguridad de la información y la privacidad de los usuarios. Este sitio web es un ejemplo del poder que tiene la tecnología para facilitar la colaboración y la comunicación.</p>
+        <h3>Desarrollado por Leonardo Gonzalez</h3>
+        <h3>Todos los derechos reservados &copy; 2023 | Leonardo Gonzalez</h3>
+        <h3>Congregacion Piñones</h3>
+        <button class="close-btn" id="close-banner"><i class="fas fa-door-closed"></i></button>
+    </div>
+    <script src="/JS/banner.js"></script>
+
+    <script src="/JS/participo.js"></script>
+
+    <script src="/JS/activarmododark.js"></script>
+
+    <!--Actualizacion del mes automatizada-->
+    <script src="/JS/actualizacionMes.js"></script>  
+      
+    <script src="/JS/RTDB.js"></script>
+    
+    <script src="/JS/publicador.js"></script>
+    
+    <!-- Publicador -->
+   <script src="/JS/publicadors.js"></script>
+    <!-- Precursor Regular -->
+     <script src="/JS/precursorRegular.js"></script>
+    
+    <!-- Precursor Auxiliar-->
+    <script src="/JS/precursosrAuxiliar.js"></script>
+    <script src="/JS/menulateral.js"></script>
+</body>
+</html>

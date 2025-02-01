@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualización de Asignaciones</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    .section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      background-color: #1a237e;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: -20px -20px 20px -20px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .section-header {
+      color: white;
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+    .tesoros-header { background-color: #575B5C; }
+    .maestros-header { background-color: #BF7E04; }
+    .vida-header { background-color: #73022C; }
+    .subsection {
+      background-color: #f5f5f5;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border-left: 4px solid;
+    }
+    .tesoros-subsection { border-left-color: #575B5C; }
+    .maestros-subsection { border-left-color: #BF7E04; }
+    .vida-subsection { border-left-color: #73022C; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-12">
+        <div id="weeks-view"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const db = firebase.firestore();
+
+    function loadAssignments() {
+      db.collection('assignments').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const section = document.createElement('div');
+          section.className = 'section';
+          section.id = doc.id;
+
+          section.innerHTML = `
+            <h2>${data.title}</h2>
+            <p><strong>Presidente:</strong> ${data.president}</p>
+            <div class="section-header tesoros-header">TESOROS DE LA BIBLIA</div>
+            <div class="subsection tesoros-subsection">
+              <ul>
+                ${data.tesoros.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="section-header maestros-header">SEAMOS MEJORES MAESTROS</div>
+            <div class="subsection maestros-subsection">
+              <ul>
+                ${data.maestros.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="section-header vida-header">NUESTRA VIDA CRISTIANA</div>
+            <div class="subsection vida-subsection">
+              <ul>
+                ${data.vida.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+
+          document.getElementById('weeks-view').appendChild(section);
+        });
+      }).catch((error) => {
+        console.error('Error al cargar las asignaciones: ', error);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAssignments();
+    });
+  </script>
+</body>
+</html>
