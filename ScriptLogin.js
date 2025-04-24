@@ -68,7 +68,7 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// 6. Manejo del estado de autenticación
+// 6. Manejo del estado de autenticación (parte modificada)
 auth.onAuthStateChanged((user) => {
     const currentPage = window.location.pathname.split('/').pop().toLowerCase();
     const isAdminPage = currentPage === 'adm.html';
@@ -85,8 +85,8 @@ auth.onAuthStateChanged((user) => {
             loginBtn.classList.add('logout-btn');
         }
         
-        // Redirección según página
-        if (!isAdminPage && !isReportsPage) {
+        // Redirección según página (parte modificada)
+        if (!isAdminPage && !isReportsPage && !isIndexPage) {
             setTimeout(() => {
                 window.location.href = 'adm.html';
             }, window.innerWidth < 768 ? 500 : 0);
