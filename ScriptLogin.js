@@ -70,21 +70,32 @@ function showNotification(message, type) {
 
 // 6. Manejo del estado de autenticación (versión simplificada)
 auth.onAuthStateChanged((user) => {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const protectedPages = ['adm.html', 'informes.html']; // Páginas que requieren login
+    const isProtectedPage = protectedPages.includes(currentPage);
+    
     const loginBtn = document.querySelector('.login-btn');
-
+    
     if (user) {
-        // Actualizar botón a logout
+        // Botón de logout
         if (loginBtn) {
             loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Cerrar Sesión';
             loginBtn.onclick = handleLogout;
             loginBtn.classList.add('logout-btn');
         }
     } else {
-        // Actualizar botón a login
+        // Botón de login
         if (loginBtn) {
             loginBtn.innerHTML = 'Iniciar Sesión';
             loginBtn.onclick = showLoginModal;
             loginBtn.classList.remove('logout-btn');
+        }
+        
+        // Redirigir solo si está en una página protegida
+        if (isProtectedPage) {
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 500);
         }
     }
 });
