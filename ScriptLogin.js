@@ -45,11 +45,10 @@ auth.onAuthStateChanged((user) => {
     const loginBtn = document.querySelector('.login-btn');
     
     // Detectar página actual
-    const currentPath = window.location.pathname.toLowerCase();
-    const isAdminPage = currentPath.includes('adm.html');
-    const isReportsPage = currentPath.includes('informes.html');
-    const isIndexPage = currentPath.includes('index.html');
-
+const currentPath = window.location.pathname.toLowerCase(); // Convertir a minúsculas
+const isAdminPage = currentPath.includes('adm.html');
+const isReportsPage = currentPath.includes('informes.html'); // Ahora en minúsculas
+const isIndexPage = currentPath.includes('index.html');
     if (user) {
         // Lógica para usuario logueado
         if (loginBtn) {
