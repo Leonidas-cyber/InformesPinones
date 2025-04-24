@@ -1,5 +1,4 @@
 import { auth } from './firebaseConfig.js';
-// Inicializar Firebase
 
 // Función para mostrar mensajes
 function showMessage(elementId, message, type) {
@@ -18,7 +17,6 @@ function showMessage(elementId, message, type) {
 // Función para manejar el cierre de sesión
 function handleLogout() {
     auth.signOut().then(() => {
-        // Mostrar notificación de cierre de sesión exitoso
         const notification = document.createElement('div');
         notification.textContent = 'Sesión cerrada correctamente';
         notification.style.position = 'fixed';
@@ -33,7 +31,7 @@ function handleLogout() {
 
         setTimeout(() => {
             document.body.removeChild(notification);
-            window.location.href = 'index.html'; // Redirigir a index.html al cerrar sesión
+            window.location.href = 'index.html';
         }, 1500);
     }).catch((error) => {
         console.error('Error al cerrar sesión:', error);
@@ -48,7 +46,6 @@ auth.onAuthStateChanged((user) => {
     const currentPage = window.location.pathname.split('/').pop();
 
     if (user) {
-        // Usuario ha iniciado sesión (la redirección ocurre en el formulario de login)
         if (loginBtn) {
             loginBtn.textContent = 'Cerrar Sesión';
             loginBtn.classList.add('logout-btn');
@@ -57,12 +54,10 @@ auth.onAuthStateChanged((user) => {
                 handleLogout();
             };
         }
-        // Si el usuario está logueado y no está en adm.html o Informes.html, redirige a adm.html
         if (currentPage !== 'adm.html' && currentPage !== 'Informes.html') {
             window.location.href = 'adm.html';
         }
     } else {
-        // Usuario no está logueado
         if (loginBtn) {
             loginBtn.textContent = 'Iniciar Sesión';
             loginBtn.classList.remove('logout-btn');
@@ -71,8 +66,7 @@ auth.onAuthStateChanged((user) => {
                 document.body.style.overflow = 'hidden';
             };
         }
-        // Si no hay usuario logueado y no estamos en index.html, redirige
-         if (currentPage !== 'index.html') {
+        if (currentPage !== 'index.html') {
             window.location.href = 'index.html';
         }
     }
@@ -94,8 +88,10 @@ const backToLoginLink = document.getElementById('backToLoginLink');
 closeModals.forEach(closeBtn => {
     closeBtn.addEventListener('click', function() {
         const modal = this.closest('.login-modal');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
     });
 });
 
@@ -179,7 +175,7 @@ if (loginForm) {
                 setTimeout(() => {
                     loginModal.style.display = 'none';
                     document.body.style.overflow = 'auto';
-                    window.location.href = 'adm.html'; // Redirigir a adm.html al iniciar sesión
+                    window.location.href = 'adm.html';
                 }, 1500);
             })
             .catch((error) => {
@@ -205,7 +201,7 @@ if (loginForm) {
     });
 }
 
-// Manejar el envío del formulario de registro (sin cambios en la lógica de redirección)
+// Manejar el envío del formulario de registro
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
     registerForm.addEventListener('submit', function(e) {
@@ -254,7 +250,7 @@ if (registerForm) {
     });
 }
 
-// Manejar el envío del formulario de recuperación de contraseña (sin cambios en la lógica de redirección)
+// Manejar el envío del formulario de recuperación de contraseña
 const resetPasswordForm = document.getElementById('resetPasswordForm');
 if (resetPasswordForm) {
     resetPasswordForm.addEventListener('submit', function(e) {
@@ -287,115 +283,27 @@ if (resetPasswordForm) {
     });
 }
 
-const ALLOWED_UID = "IPeJrbYsfQcQUrbLiQ4qn0Ud02S2";
-
-// Manejar registro
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('regEmail').value;
-    const password = document.getElementById('regPassword').value;
-    const uid = document.getElementById('regUID').value;
-    const registerMessage = document.getElementById('registerMessage');
-
-    if (uid !== ALLOWED_UID) {
-        registerMessage.style.display = 'block';
-        registerMessage.textContent = "UID de invitación inválido";
-        return;
-    }
-
-    try {
-        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-        
-        // Guardar datos adicionales en Realtime Database
-        await firebase.database().ref('users/' + userCredential.user.uid).set({
-            email: email,
-            registrationDate: new Date().toISOString(),
-            role: 'user'
-        });
-
-        Swal.fire('Registro exitoso', 'Ahora puedes iniciar sesión', 'success');
-        $('#registerModal').hide();
-        document.getElementById('registerForm').reset();
-    } catch (error) {
-        let errorMessage = "Error en el registro: ";
-        switch (error.code) {
-            case 'auth/email-already-in-use':
-                errorMessage += "El correo ya está registrado";
-                break;
-            case 'auth/invalid-email':
-                errorMessage += "Correo electrónico inválido";
-                break;
-            case 'auth/weak-password':
-                errorMessage += "La contraseña debe tener al menos 6 caracteres";
-                break;
-            default:
-                errorMessage += error.message;
-        }
-        registerMessage.style.display = 'block';
-        registerMessage.textContent = errorMessage;
-    }
-});
-
-// Mostrar/ocultar modales
-document.getElementById('registerLink').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('registerModal').style.display = 'block';
-});
-
 // Cerrar modal de registro
-document.querySelector('#registerModal .close-modal').addEventListener('click', () => {
-    document.getElementById('registerModal').style.display = 'none';
-});
+const registerCloseBtn = document.querySelector('#registerModal .close-modal');
+if (registerCloseBtn) {
+    registerCloseBtn.addEventListener('click', () => {
+        document.getElementById('registerModal').style.display = 'none';
+    });
+}
 
-// Manejar recuperación de contraseña
-document.getElementById('resetPasswordLink').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('loginModal').style.display = 'none';
-    document.getElementById('forgotPasswordModal').style.display = 'block';
-});
-
-document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('resetEmail').value;
-    const forgotMessage = document.getElementById('forgotMessage');
-
-    try {
-        await firebase.auth().sendPasswordResetEmail(email);
-        Swal.fire({
-            icon: 'success',
-            title: 'Correo enviado',
-            text: 'Revisa tu bandeja de entrada para restablecer tu contraseña'
-        });
-        document.getElementById('forgotPasswordModal').style.display = 'none';
-    } catch (error) {
-        forgotMessage.style.display = 'block';
-        forgotMessage.textContent = this.getPasswordResetError(error.code);
-    }
-});
-
-// Manejador de errores
-function getPasswordResetError(code) {
-    switch(code) {
-        case 'auth/invalid-email':
-            return 'El formato del correo es inválido';
-        case 'auth/user-not-found':
-            return 'No existe una cuenta con este correo';
-        default:
-            return 'Error al enviar el correo de recuperación';
-    }
+// Cerrar modal de recuperación
+const resetCloseBtn = document.querySelector('#resetPasswordModal .close-modal');
+if (resetCloseBtn) {
+    resetCloseBtn.addEventListener('click', () => {
+        document.getElementById('resetPasswordModal').style.display = 'none';
+    });
 }
 
 // Enlaces entre modales
 document.querySelectorAll('.login-link').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        document.getElementById('forgotPasswordModal').style.display = 'none';
+        document.getElementById('resetPasswordModal').style.display = 'none';
         document.getElementById('loginModal').style.display = 'block';
     });
-});
-
-// Cerrar modal de recuperación
-document.querySelector('#forgotPasswordModal .close-modal').addEventListener('click', () => {
-    document.getElementById('forgotPasswordModal').style.display = 'none';
 });
