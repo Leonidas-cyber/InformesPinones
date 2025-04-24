@@ -1,0 +1,1003 @@
+:root {
+    --primary-color: #871bcf;
+    --secondary-color: #6c757d;
+    --light-bg: #f8f9fa;
+    --dark-bg: #212529;
+    --light-text: #f8f9fa;
+    --dark-text: #212529;
+    --accent-color: #7c4dff;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    transition: var(--transition);
+    overflow-x: hidden;
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+}
+
+/* Loading Screen Styles */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-content h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1.5rem 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    margin: 2rem auto;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.8; transform: scale(0.98); }
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.logo i {
+    margin-right: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-item {
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: var(--transition);
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    transition: var(--transition);
+}
+
+.nav-link:hover:after {
+    width: 100%;
+}
+
+.login-btn {
+    background-color: white;
+    color: var(--primary-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Welcome Message Styles */
+.welcome-banner {
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-out;
+}
+
+.welcome-banner h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 3rem 2rem 2rem;
+    margin-top: 4rem;
+    transition: var(--transition);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section h3 {
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.footer-section h3:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 50px;
+    background-color: white;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: white;
+    padding-left: 5px;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: white;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    background-color: white;
+    color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente el contenido */
+}
+
+/* Formulario Styles */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-top: 2rem;
+    transition: var(--transition);
+}
+
+body.dark-mode .form-container {
+    background-color: #2c3034;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: var(--secondary-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+body.dark-mode .form-control {
+    background-color: #343a40;
+    border-color: #495057;
+    color: white;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.25);
+    outline: none;
+}
+
+.form-control:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+body.dark-mode .form-control:disabled {
+    background-color: #495057;
+    color: #adb5bd;
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+}
+
+body.dark-mode .form-select {
+    background-color: #343a40;
+    border-color: #495057;
+    color: white;
+}
+
+.radio-group {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.radio-option input {
+    margin-right: 0.5rem;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto;
+    font-size: 1rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Aviso de rol */
+.role-notice {
+    background-color: #e7f3ff;
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0 5px 5px 0;
+    display: none;
+}
+
+body.dark-mode .role-notice {
+    background-color: #2b3035;
+    border-left: 4px solid var(--primary-color);
+}
+
+.role-notice h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.role-notice p {
+    margin-bottom: 0.5rem;
+}
+
+.role-notice strong {
+    color: var(--primary-color);
+}
+
+.role-notice ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.role-notice li {
+    margin-bottom: 0.5rem;
+}
+
+/* Ajustes generales para dispositivos móviles */
+@media screen and (max-width: 767px) {
+    /* Ajustes para el header */
+    .header-container {
+        padding: 10px 15px;
+    }
+    
+    .logo {
+        font-size: 18px;
+    }
+    
+    /* Menú de navegación móvil */
+    .nav-menu {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: var(--bg-color);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex-direction: column;
+        padding: 15px 0;
+        z-index: 1000;
+        transform: translateY(-150%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .nav-menu.active {
+        transform: translateY(0);
+    }
+    
+    .nav-item {
+        width: 100%;
+        margin: 8px 0;
+        text-align: center;
+    }
+    
+    .mobile-toggle {
+        display: flex;
+        font-size: 20px;
+    }
+    
+    /* Formulario de servicio */
+    .form-container {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-control, .form-select {
+        padding: 12px;
+        font-size: 16px; /* Evita zoom automático en iOS */
+    }
+    
+    /* Ajustes para botones táctiles */
+    button, .submit-btn, .login-btn {
+        min-height: 44px; /* Tamaño mínimo recomendado para elementos táctiles */
+        padding: 10px 15px;
+    }
+    
+    /* Modales de inicio de sesión y registro */
+    .login-content {
+        width: 90%;
+        max-width: 350px;
+        padding: 15px;
+    }
+    
+    .close-modal {
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+    }
+    
+    .input-with-icon input {
+        padding-left: 35px;
+        padding-right: 35px;
+        height: 44px;
+        font-size: 16px; /* Evita zoom automático en iOS */
+    }
+    
+    .input-with-icon i {
+        top: 15px;
+    }
+    
+    .show-password {
+        right: 10px;
+        top: 12px;
+    }
+    
+    /* Footer para móviles */
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-section {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    /* Ajustes para avisos por rol */
+    .role-notice {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    /* Pantalla de carga */
+    .loading-content h1 {
+        font-size: 22px;
+        text-align: center;
+        padding: 0 15px;
+    }
+}
+
+/* Arreglos específicos para iPhone (Safe Area) */
+@supports (-webkit-touch-callout: none) {
+    /* Estos estilos solo se aplicarán en dispositivos iOS */
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+    
+    /* Ajuste para notch en iPhone X y posteriores */
+    .header-container {
+        padding-top: max(10px, env(safe-area-inset-top));
+    }
+    
+    /* Asegura que el menú móvil respete el safe area */
+    .nav-menu {
+        top: calc(60px + env(safe-area-inset-top));
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Ajustes para modales */
+    .login-modal {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Mejoras de accesibilidad táctil */
+input, select, textarea, button, .radio-option {
+    touch-action: manipulation;
+}
+
+/* Evitar zoom no deseado en inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    font-size: 16px;
+}
+
+/* Arreglos para formularios */
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.radio-option {
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 8px;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+/* Ajustes específicos para el modal de inicio de sesión en móviles */
+@media screen and (max-width: 767px) {
+    /* Contenedor del modal */
+    .login-modal {
+        padding: 10px;
+    }
+    
+    /* Contenido del modal */
+    .login-content {
+        width: 90%;
+        max-width: 320px; /* Más estrecho para iPhone */
+        padding: 15px;
+        margin: 10% auto; /* Centrado vertical con menos espacio */
+        max-height: 85vh; /* Limitar altura máxima */
+        overflow-y: auto; /* Permitir scroll si el contenido es grande */
+    }
+    
+    /* Encabezado del modal */
+    .login-header h2 {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+    
+    .login-header p {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    /* Campos de formulario */
+    .login-form .form-group {
+        margin-bottom: 12px;
+    }
+    
+    .login-form label {
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    
+    .input-with-icon input {
+        height: 40px;
+        font-size: 15px;
+        padding: 8px 30px 8px 35px;
+    }
+    
+    .input-with-icon i {
+        font-size: 14px;
+        top: 13px;
+    }
+    
+    /* Botón de mostrar contraseña */
+    .show-password {
+        right: 8px;
+        top: 10px;
+        font-size: 14px;
+    }
+    
+    /* Opciones de formulario */
+    .form-options {
+        font-size: 13px;
+        margin: 8px 0;
+    }
+    
+    /* Botón de envío */
+    .login-submit {
+        padding: 10px;
+        font-size: 15px;
+        margin-top: 10px;
+    }
+    
+    /* Footer del formulario */
+    .login-footer {
+        margin-top: 10px;
+        font-size: 13px;
+    }
+    
+    /* Botón para cerrar */
+    .close-modal {
+        font-size: 22px;
+        top: 8px;
+        right: 8px;
+    }
+        /* Estilos generales para el formulario */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--background-color-secondary);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-header h2 {
+    color: var(--text-color-primary);
+    margin-bottom: 5px;
+}
+
+.form-header p {
+    color: var(--text-color-secondary);
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color-primary);
+    font-weight: 500;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+    color: var(--text-color-primary);
+    background-color: var(--input-background);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+/* Estilos para responsive */
+@media screen and (max-width: 768px) {
+    .content {
+        padding: 15px;
+    }
+    
+    .form-container {
+        padding: 15px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+    
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .radio-group {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    
+    .radio-option {
+        margin-right: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .form-container {
+        padding: 10px;
+    }
+    
+    .form-header h2 {
+        font-size: 20px;
+    }
+    
+    .form-header p {
+        font-size: 12px;
+    }
+    
+    .submit-btn {
+        width: 100%;
+    }
+    
+    .role-notice {
+        padding: 10px;
+    }
+    
+    .role-notice h3 {
+        font-size: 16px;
+    }
+    
+    .role-notice p, .role-notice li {
+        font-size: 13px;
+    }
+}
+
+/* Estilos para los avisos de rol */
+.role-notice {
+    background-color: var(--notice-background);
+    border-left: 4px solid var(--accent-color);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    display: none;
+}
+
+.role-notice h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+    font-size: 18px;
+}
+
+.role-notice p {
+    margin-bottom: 10px;
+    color: var(--text-color-primary);
+}
+
+.role-notice ol {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.role-notice li {
+    margin-bottom: 5px;
+    color: var(--text-color-secondary);
+}
+
+/* Estilos para los botones */
+.submit-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    width: auto;
+    margin: 20px auto 0;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-color-hover);
+}
+
+/* Estilos para opciones de radio */
+.radio-group {
+    display: flex;
+    align-items: center;
+}
+
+.radio-option {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 8px;
+}
+
+.dark-mode {
+    --primary-color: #5d82c1;
+    --primary-color-hover: #6d92d1;
+    --background-color-secondary: #333;
+    --text-color-primary: #e0e0e0;
+    --text-color-secondary: #aaa;
+    --border-color: #555;
+    --input-background: #444;
+    --notice-background: #2a3952;
+    --accent-color: #5d82c1;
+}
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .mobile-toggle {
+        display: block;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 250px;
+        background-color: var(--dark-bg);
+        flex-direction: column;
+        padding: 2rem;
+        transition: var(--transition);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        justify-content: flex-start;
+        gap: 2rem;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-item {
+        width: 100%;
+    }
+
+    .nav-link {
+        display: block;
+        width: 100%;
+    }
+
+    .nav-link:after {
+        display: none;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .welcome-banner h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Contenido de ejemplo para demostración */
+.content {
+    min-height: 80vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Efecto para mostrar el contenido principal */
+.main-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.main-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
