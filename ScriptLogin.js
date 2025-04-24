@@ -43,31 +43,43 @@ function handleLogout() {
 auth.onAuthStateChanged((user) => {
     console.log('Estado de autenticación:', user ? 'Usuario logueado' : 'No hay usuario');
     const loginBtn = document.querySelector('.login-btn');
-    const currentPage = window.location.pathname.split('/').pop();
+    
+    // Detectar página actual
+    const currentPath = window.location.pathname.toLowerCase();
+    const isAdminPage = currentPath.includes('adm.html');
+    const isReportsPage = currentPath.includes('informes.html');
+    const isIndexPage = currentPath.includes('index.html');
 
     if (user) {
+        // Lógica para usuario logueado
         if (loginBtn) {
             loginBtn.textContent = 'Cerrar Sesión';
-            loginBtn.classList.add('logout-btn');
-            loginBtn.onclick = function(e) {
+            loginBtn.onclick = (e) => {
                 e.preventDefault();
                 handleLogout();
             };
         }
-        if (currentPage !== 'adm.html' && currentPage !== 'Informes.html') {
-            window.location.href = 'adm.html';
+        
+        // Redirigir solo si no está en página permitida
+        if (!isAdminPage && !isReportsPage) {
+            setTimeout(() => {
+                window.location.href = 'adm.html';
+            }, window.innerWidth < 768 ? 500 : 0);
         }
     } else {
+        // Lógica para usuario no logueado
         if (loginBtn) {
             loginBtn.textContent = 'Iniciar Sesión';
-            loginBtn.classList.remove('logout-btn');
-            loginBtn.onclick = function() {
+            loginBtn.onclick = () => {
                 loginModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
             };
         }
-        if (currentPage !== 'index.html') {
-            window.location.href = 'index.html';
+        
+        // Redirigir solo si no está en index
+        if (!isIndexPage) {
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, window.innerWidth < 768 ? 500 : 0);
         }
     }
 });
