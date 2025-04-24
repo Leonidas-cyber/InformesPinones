@@ -41,40 +41,18 @@ function handleLogout() {
 
 // Manejar el estado de autenticación
 auth.onAuthStateChanged((user) => {
-    console.log('Estado de autenticación:', user ? 'Usuario logueado' : 'No hay usuario');
-    const loginBtn = document.querySelector('.login-btn');
-    
-    // Detectar página actual
-const currentPath = window.location.pathname.toLowerCase(); // Convertir a minúsculas
-const isAdminPage = currentPath.includes('adm.html');
-const isReportsPage = currentPath.includes('informes.html'); // Ahora en minúsculas
-const isIndexPage = currentPath.includes('index.html');
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const isAdminPage = currentPage === 'adm.html';
+    const isReportsPage = currentPage === 'informes.html';
+    const isIndexPage = currentPage === 'index.html' || currentPage === '';
+
     if (user) {
-        // Lógica para usuario logueado
-        if (loginBtn) {
-            loginBtn.textContent = 'Cerrar Sesión';
-            loginBtn.onclick = (e) => {
-                e.preventDefault();
-                handleLogout();
-            };
-        }
-        
-        // Redirigir solo si no está en página permitida
         if (!isAdminPage && !isReportsPage) {
             setTimeout(() => {
                 window.location.href = 'adm.html';
             }, window.innerWidth < 768 ? 500 : 0);
         }
     } else {
-        // Lógica para usuario no logueado
-        if (loginBtn) {
-            loginBtn.textContent = 'Iniciar Sesión';
-            loginBtn.onclick = () => {
-                loginModal.style.display = 'block';
-            };
-        }
-        
-        // Redirigir solo si no está en index
         if (!isIndexPage) {
             setTimeout(() => {
                 window.location.href = 'index.html';
