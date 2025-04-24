@@ -129,30 +129,7 @@
         </div>
 
     
-    <!-- Aquí se inserta el script que carga el menú y el pie de página -->
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const toggleBtn = document.querySelector(".dark-mode-toggle");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const savedTheme = localStorage.getItem("theme");
-    
-        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-            document.body.classList.add("dark-mode");
-        }
-    
-        toggleBtn.addEventListener("click", () => {
-            document.body.classList.toggle("dark-mode");
-    
-            const isDark = document.body.classList.contains("dark-mode");
-            localStorage.setItem("theme", isDark ? "dark" : "light");
-    
-            // Cambia el ícono y texto
-            toggleBtn.querySelector("i").className = isDark ? "fas fa-sun" : "fas fa-moon";
-            toggleBtn.querySelector("span").textContent = isDark ? "Modo Claro" : "Modo Oscuro";
-        });
-    });
-    </script>
 <script>
     fetch("/menuadm.html")
         .then(response => response.text())
