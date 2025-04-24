@@ -101,11 +101,13 @@
                         </div>
 
                         <div class="secretary-content" id="secretaryContent" style="display: none;">
+                            <!-- Agrega esta línea -->
+                            <div id="userSection" class="user-section"></div>
+                            
                             <h3>Registro de Publicadores</h3>
                             <div class="secretary-drive-access">
                                 <p>Acceso a las carpetas de Google Drive:</p>
-                                <ul id="driveFoldersList">
-                                </ul>
+                                <ul id="driveFoldersList"></ul>
                             </div>
                             <button class="secretary-logout-btn" id="secretaryLogoutBtn">
                                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión de Secretario
@@ -140,5 +142,6 @@
             document.body.insertAdjacentHTML("afterbegin", data);    
         });
     </script>
+    <!-- En la sección correspondiente (ej. cerca del login) -->
 </body>
 </html>

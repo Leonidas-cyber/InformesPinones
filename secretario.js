@@ -13,14 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ==================== VALIDACIÓN INICIAL ====================
-    if (!elements.driveFoldersList || !elements.secretaryLoginForm || !elements.userSection) {
-        console.error("Elementos críticos faltantes:", {
-            driveFoldersList: !!elements.driveFoldersList,
-            secretaryLoginForm: !!elements.secretaryLoginForm,
-            userSection: !!elements.userSection
-        });
-        return;
-    }
+  // Validación en tu JS
+        if (!elements.driveFoldersList || !elements.secretaryLoginForm || !elements.userSection) {
+            console.error("Elementos críticos faltantes:", {
+                driveFoldersList: !!elements.driveFoldersList,
+                secretaryLoginForm: !!elements.secretaryLoginForm,
+                userSection: !!elements.userSection // Aquí se detecta el problema
+            });
+            return;
+        }
 
     // ==================== CONFIGURACIÓN ====================
     const allowedSecretaryUids = ['IPeJrbYsfQcQUrbLiQ4qn0Ud02S2', 'uTC7qw2rltgm6eteCYcSo3jsARq2'];
