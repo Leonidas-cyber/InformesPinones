@@ -68,13 +68,8 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// 6. Manejo del estado de autenticación (parte modificada)
+// 6. Manejo del estado de autenticación (versión simplificada)
 auth.onAuthStateChanged((user) => {
-    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
-    const isAdminPage = currentPage === 'adm.html';
-    const isReportsPage = currentPage === 'informes.html';
-    const isIndexPage = currentPage === 'index.html' || currentPage === '';
-    
     const loginBtn = document.querySelector('.login-btn');
 
     if (user) {
@@ -84,26 +79,12 @@ auth.onAuthStateChanged((user) => {
             loginBtn.onclick = handleLogout;
             loginBtn.classList.add('logout-btn');
         }
-        
-        // Redirección según página (parte modificada)
-        if (!isAdminPage && !isReportsPage && !isIndexPage) {
-            setTimeout(() => {
-                window.location.href = 'adm.html';
-            }, window.innerWidth < 768 ? 500 : 0);
-        }
     } else {
         // Actualizar botón a login
         if (loginBtn) {
             loginBtn.innerHTML = 'Iniciar Sesión';
             loginBtn.onclick = showLoginModal;
             loginBtn.classList.remove('logout-btn');
-        }
-        
-        // Redirección según página
-        if (!isIndexPage) {
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, window.innerWidth < 768 ? 500 : 0);
         }
     }
 });
