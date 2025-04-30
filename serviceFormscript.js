@@ -102,11 +102,12 @@ if (!serviceForm) {
       .then(() => {
         console.log('[serviceFormscript] Envío a Firebase exitoso');
         Swal.fire({
-          title: '¡Éxito!',
+          title: '¡Excelente trabajo!',
           text: 'Informe enviado correctamente',
           icon: 'success',
           confirmButtonText: 'Aceptar'
-        }).then(() => {
+        })
+        .then(() => {
           serviceForm.reset();
           document.querySelectorAll('.role-notice').forEach(n => n.style.display = 'none');
         });

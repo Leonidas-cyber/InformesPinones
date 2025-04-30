@@ -63,7 +63,8 @@
             
             <div class="form-container">
                 <div class="form-header">
-                    <h2>Informe Mensual de Servicio</h2>
+                    <h2>Informe Mensual de Servicio</h2> <p id="mesServicio" style="font-weight: bold;"></p>
+
                     <p>Complete todos los campos requeridos</p>
                 </div>
                 
@@ -282,5 +283,25 @@
     <script src="/script.js" type="module"></script>
     <script src="/mobile.js"></script>
 <script src="/serviceFormscript.js"></script>
+
+<script>
+    function obtenerMesAnterior() {
+        const fecha = new Date();
+        fecha.setMonth(fecha.getMonth() - 1); // Resta un mes
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+        return meses[fecha.getMonth()];
+    }
+
+    // Inserta el texto en el HTML
+    document.addEventListener("DOMContentLoaded", function() {
+        const mesAnterior = obtenerMesAnterior();
+        document.getElementById("mesServicio").textContent = 
+            `El mes de servicio que se enviará corresponde a: ${mesAnterior}`;
+    });
+</script>
+
 </body>
 </html>

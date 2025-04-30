@@ -63,6 +63,7 @@ if (mobileToggle && navMenu) {
     });
 }
 
+/*
 // Manejo de cambios en el rol seleccionado (versión optimizada)
 const roleSelect = document.getElementById('role');
 const hoursInput = document.getElementById('hours');
@@ -119,10 +120,16 @@ if (serviceForm) {
 
 // Funciones auxiliares
 function showToast(message, type) {
-    // Implementar un sistema de notificaciones toast
-    console.log(`${type}: ${message}`);
-    alert(message); // Temporal - reemplazar con toast real
+    Swal.fire({
+        icon: type,
+        title: message,
+        timer: 2000,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top-end'
+    });
 }
+
 
 function resetForm() {
     serviceForm.reset();
@@ -130,4 +137,4 @@ function resetForm() {
         notice && (notice.style.display = 'none');
     });
     hoursInput.disabled = false;
-}
+}*/
