@@ -11,6 +11,39 @@
     <link rel="stylesheet" href="cardsStyles.css">
     <link rel="stylesheet" href="modalelim.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        .btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+}
+
+#passwordPromptModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#passwordPromptModal .modal-content {
+    background: white;
+    width: 300px;
+    padding: 20px;
+    margin: 100px auto;
+    border-radius: 5px;
+}
+    </style>
 </head>
 <body>
 
@@ -42,6 +75,9 @@
                     <option value="Precursor Regular">Precursor Regular</option>
                 </select>
             </div>
+            <button class="btn-danger" id="deleteAllReportsBtn">
+                <i class="fas fa-trash"></i> Borrar Todos los Informes
+            </button>
         </div>
 
         <div class="stat-cards" id="summaryStats">
@@ -170,5 +206,100 @@
     </div>
   </div>
 
+  <!--Otro modal-->
+  <div id="passwordPromptModal">
+    <div class="modal-content">
+        <h3>Eliminar todos los informes</h3>
+        <p>Ingrese la contraseña especial:</p>
+        <input type="password" id="deletePassword" placeholder="Contraseña">
+        <div class="modal-buttons" style="margin-top: 15px;">
+            <button class="btn-secondary" id="cancelDelete">Cancelar</button>
+            <button class="btn-danger" id="confirmDeleteAll">Confirmar</button>
+        </div>
+    </div>
+</div>
+<script>
+// Configura la contraseña especial (cámbiala por una segura)
+const SPECIAL_PASSWORD = "Arrayanes2024";
+
+// Elementos del DOM
+const deleteAllBtn = document.getElementById('deleteAllReportsBtn');
+const passwordModal = document.getElementById('passwordPromptModal');
+const confirmDeleteAllBtn = document.getElementById('confirmDeleteAll');
+const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+// Mostrar modal de contraseña
+deleteAllBtn.addEventListener('click', () => {
+    passwordModal.style.display = 'block';
+    document.getElementById('deletePassword').value = '';
+});
+
+// Cancelar eliminación
+cancelDeleteBtn.addEventListener('click', () => {
+    passwordModal.style.display = 'none';
+});
+
+// Confirmar eliminación
+confirmDeleteAllBtn.addEventListener('click', async () => {
+    const enteredPassword = document.getElementById('deletePassword').value;
+
+    if(enteredPassword === SPECIAL_PASSWORD) {
+        try {
+            // Mostrar loading (asumiendo que tienes una función showLoading)
+            if (typeof showLoading === 'function') {
+                showLoading();
+            }
+
+            // Eliminar todos los informes de Firebase
+            const reportsRef = firebase.database().ref('users');
+            await reportsRef.remove();
+
+            // Actualizar UI
+            passwordModal.style.display = 'none';
+            showToast('Todos los informes han sido eliminados', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (error) {
+            console.error("Error deleting reports:", error);
+            showToast('Error al eliminar los informes', 'error');
+        } finally {
+            // Ocultar loading (asumiendo que tienes una función hideLoading)
+            if (typeof hideLoading === 'function') {
+                hideLoading();
+            }
+        }
+    } else {
+        showToast('Contraseña incorrecta', 'error');
+        document.getElementById('deletePassword').value = '';
+    }
+});
+
+// Función para mostrar notificaciones (si no la tienes definida en otro script)
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    const container = document.getElementById('toast-container');
+    container.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// Asumiendo que tienes funciones showLoading y hideLoading definidas en otro script
+// Si no las tienes, podrías implementarlas aquí o en tu archivo informes.js
+// function showLoading() {
+//     const loadingScreen = document.querySelector('.loading-screen');
+//     if (loadingScreen) {
+//         loadingScreen.style.display = 'flex';
+//     }
+// }
+
+// function hideLoading() {
+//     const loadingScreen = document.querySelector('.loading-screen');
+//     if (loadingScreen) {
+//         loadingScreen.style.display = 'none';
+//     }
+// }
+</script>
 </body>
 </html>

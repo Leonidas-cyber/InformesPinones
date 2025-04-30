@@ -150,6 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(() => {
                 logoutSecretary();
                 showAlert('Sesión cerrada', 'success');
+                // Redirigir a index.html después de cerrar sesión
+                window.location.href = 'index.html'; // <- Aquí está el cambio clave
             })
             .catch(error => showAlert(`Error: ${error.message}`, 'error'));
     });
