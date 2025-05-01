@@ -14,16 +14,13 @@ function showToast(message, type = 'success') {
   
   container.appendChild(toast);
   
-  // Fuerza reflow para activar la animación
   void toast.offsetWidth;
   toast.classList.add('show');
 
   setTimeout(() => {
     toast.classList.remove('show');
     setTimeout(() => {
-      if (container.contains(toast)) {
-        container.removeChild(toast);
-      }
+      container.removeChild(toast);
     }, 300);
   }, 3000);
 }
@@ -60,114 +57,110 @@ function confirmAction(message) {
   });
 }
 
-// Referencia a la colección de usuarios/informes
 const usersRef = database.ref('users');
-
-// Variables para filtros
 let allUsers = [];
 let uniqueGroups = new Set();
 
-// DOM
+// DOM Elements
 const informesList = document.getElementById('informesList');
 const statsContainer = document.getElementById('summaryStats');
 const groupFilter = document.getElementById('groupFilter');
 const searchInput = document.getElementById('searchInput');
 const roleFilter = document.getElementById('roleFilter');
+const participationFilter = document.getElementById('participationFilter');
 
-// Modal edición
+// Edit Modal Elements
 const editModal = document.getElementById('editReportModal');
 const editForm = document.getElementById('editReportForm');
-
 let currentEditId = null;
 
-// Carga inicial
 document.addEventListener('DOMContentLoaded', () => {
   cargarInformes();
   configurarFiltros();
+  
+  // Configurar evento de participación
+  const participationToggle = document.getElementById('editParticipated');
+  if (participationToggle) {
+    participationToggle.addEventListener('change', function() {
+      const hoursField = document.getElementById('editHours');
+      const studiesField = document.getElementById('editStudies');
+      
+      hoursField.disabled = !this.checked;
+      studiesField.disabled = !this.checked;
+      
+      if (!this.checked) {
+        hoursField.value = 0;
+        studiesField.value = 0;
+      }
+    });
+  }
 });
 
-/**
- * Lee datos en tiempo real y renderiza
- */
 function cargarInformes() {
   showLoading();
   usersRef.on('value', snapshot => {
     const users = snapshot.val() || {};
-    allUsers = [];
+    allUsers = Object.entries(users).map(([id, user]) => ({ id, ...user }));
     uniqueGroups.clear();
-    ocultarLoading();
 
-    if (Object.keys(users).length === 0) {
-      mostrarEstadoVacio('No se encontraron registros de informes');
-      statsContainer.innerHTML = '';
-      informesList.innerHTML = '';
-      return;
-    }
-
-    Object.entries(users).forEach(([id, user]) => {
-      user.id = id;
-      allUsers.push(user);
+    allUsers.forEach(user => {
       if (user.superintendente) uniqueGroups.add(user.superintendente);
     });
 
     actualizarFiltros();
     aplicarFiltros();
+    ocultarLoading();
   }, error => {
     console.error('Error al cargar datos:', error);
-    mostrarError('Error al cargar datos: ' + error.message);
+    showToast('Error al cargar datos: ' + error.message, 'error');
     ocultarLoading();
   });
 }
 
-/**
- * Configura eventos de filtro
- */
 function configurarFiltros() {
   searchInput.addEventListener('input', aplicarFiltros);
   groupFilter.addEventListener('change', aplicarFiltros);
   roleFilter.addEventListener('change', aplicarFiltros);
+  participationFilter.addEventListener('change', aplicarFiltros);
 }
 
-/**
- * Filtra, muestra estadísticas y renderiza informes
- */
 function aplicarFiltros() {
   const term = searchInput.value.toLowerCase();
   const group = groupFilter.value;
   const role = roleFilter.value;
+  const participation = participationFilter.value;
 
   const filtered = allUsers.filter(u => {
     const matchName = u.nombre?.toLowerCase().includes(term);
     const matchGroup = !group || u.superintendente === group;
     const matchRole = !role || u.rol === role;
-    return matchName && matchGroup && matchRole;
+    const matchParticipation = participation === '' || 
+                              (participation === 'true' && u.participo === "Sí") || 
+                              (participation === 'false' && u.participo === "No");
+
+    return matchName && matchGroup && matchRole && matchParticipation;
   });
 
   mostrarEstadisticas(filtered);
   renderizarInformes(filtered);
 }
 
-/**
- * Actualiza opciones de grupo
- */
 function actualizarFiltros() {
   groupFilter.innerHTML = '<option value="">Todos los grupos</option>';
   uniqueGroups.forEach(g => {
-    const opt = document.createElement('option');
-    opt.value = g;
-    opt.textContent = g;
-    groupFilter.appendChild(opt);
+    const option = document.createElement('option');
+    option.value = g;
+    option.textContent = g;
+    groupFilter.appendChild(option);
   });
 }
 
-/**
- * Muestra estadísticas
- */
 function mostrarEstadisticas(users) {
-  const totalHoras = users.reduce((s, u) => s + (parseFloat(u.horas) || 0), 0);
-  const totalCursos = users.reduce((s, u) => s + (parseInt(u.cursosBiblicos) || 0), 0);
+  const totalHoras = users.reduce((sum, user) => sum + (parseFloat(user.horas) || 0), 0);
+  const totalCursos = users.reduce((sum, user) => sum + (parseInt(user.cursosBiblicos, 10) || 0), 0);
   const totalPublic = users.length;
   const totalPrecursor = users.filter(u => ['Precursor Auxiliar', 'Precursor Regular'].includes(u.rol)).length;
+  const totalParticipantes = users.filter(u => u.participo === "Sí").length;
 
   statsContainer.innerHTML = `
     <div class="stat-card">
@@ -176,8 +169,13 @@ function mostrarEstadisticas(users) {
       <div class="stat-label">Publicadores</div>
     </div>
     <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-value">${totalParticipantes}</div>
+      <div class="stat-label">Participaron</div>
+    </div>
+    <div class="stat-card">
       <div class="stat-icon"><i class="fas fa-clock"></i></div>
-      <div class="stat-value">${totalHoras}</div>
+      <div class="stat-value">${totalHoras.toFixed(1)}</div>
       <div class="stat-label">Horas</div>
     </div>
     <div class="stat-card">
@@ -193,28 +191,30 @@ function mostrarEstadisticas(users) {
   `;
 }
 
-/**
- * Renderiza tarjetas de informes con editar y borrar
- */
 function renderizarInformes(users) {
   informesList.innerHTML = '';
-  if (!users.length) {
+  
+  if (users.length === 0) {
     mostrarEstadoVacio('No hay informes con los filtros aplicados');
     return;
   }
+
   users.forEach(u => {
     const card = document.createElement('div');
     card.className = 'informe-card';
-    const roleClass = u.rol === 'Precursor Regular' ? 'success' : u.rol === 'Precursor Auxiliar' ? 'warning' : 'primary';
-    const fecha = u.fechaEnvio || 'Sin fecha';
-    const notas = u.notas || 'Sin notas';
+    const roleClass = u.rol === 'Precursor Regular' ? 'success' 
+                     : u.rol === 'Precursor Auxiliar' ? 'warning' 
+                     : 'primary';
+    const participationClass = u.participo === "Sí" ? 'success' : 'danger';
+    const participationText = u.participo === "Sí" ? 'Participó' : 'No participó';
 
     card.innerHTML = `
       <div class="informe-header">
         <h3>${u.nombre || 'Sin nombre'}</h3>
         <div class="informe-subtitle">
-          <span>${fecha}</span>
+          <span>${u.fechaEnvio || 'Sin fecha'}</span>
           <span class="badge ${roleClass}">${u.rol || 'Publicador'}</span>
+          <span class="badge ${participationClass}">${participationText}</span>
         </div>
       </div>
       <div class="informe-body">
@@ -225,7 +225,7 @@ function renderizarInformes(users) {
         </div>
         <div class="notas-section">
           <div><i class="fas fa-sticky-note"></i> Notas</div>
-          <div class="notas-content">${notas}</div>
+          <div class="notas-content">${u.notas || 'Sin notas'}</div>
         </div>
         <div class="action-buttons">
           <button class="edit-btn"><i class="fas fa-edit"></i> Editar</button>
@@ -234,10 +234,7 @@ function renderizarInformes(users) {
       </div>
     `;
 
-    // Editar
     card.querySelector('.edit-btn').addEventListener('click', () => openEditModal(u));
-    
-    // Borrar (usando confirmación personalizada)
     card.querySelector('.delete-btn').addEventListener('click', async () => {
       const confirmed = await confirmAction('¿Eliminar este informe permanentemente?');
       if (confirmed) {
@@ -246,7 +243,6 @@ function renderizarInformes(users) {
           showToast('Informe eliminado correctamente', 'success');
           cargarInformes();
         } catch (err) {
-          console.error('Error eliminando:', err);
           showToast(`Error al eliminar: ${err.message}`, 'error');
         }
       }
@@ -256,47 +252,46 @@ function renderizarInformes(users) {
   });
 }
 
-/**
- * Abre modal y carga datos
- */
 function openEditModal(data) {
   currentEditId = data.id;
-  editModal.style.display = 'block';
-  
-  // Configurar opciones del grupo
-  const groupSelect = editForm['editGroup'];
-  groupSelect.innerHTML = `
-    <option value="" disabled selected>Seleccione una opción</option>
-    <option value="Alfonso.P Grupo 1">Alfonso.P Grupo 1</option>
-    <option value="Rafael.G Grupo 2">Rafael.G Grupo 2</option>
-    <option value="Alberto.G Grupo 3">Alberto.G Grupo 3</option>
-    <option value="Josue.G Grupo 4">Josue.T Grupo 4</option>
-    <option value="David.N Grupo 5">David.N Grupo 5</option>
-  `;
-  
-  // Establecer valores (AGREGAMOS EL NOMBRE)
-  editForm['editName'].value = data.nombre || '';
-  editForm['editHours'].value = data.horas || '';
-  editForm['editStudies'].value = data.cursosBiblicos || '';
-  groupSelect.value = data.superintendente || '';
-  editForm['editRole'].value = data.rol || '';
-  editForm['editDate'].value = data.fechaEnvio || '';
-  editForm['editObservations'].value = data.notas || '';
+  editModal.style.display = 'flex';
+
+  // Limpiar y cargar grupos
+  const groupSelect = document.getElementById('editGroup');
+  groupSelect.innerHTML = Array.from(uniqueGroups).map(g => 
+    `<option value="${g}" ${g === data.superintendente ? 'selected' : ''}>${g}</option>`
+  ).join('');
+
+  // Establecer valores
+  document.getElementById('editName').value = data.nombre || '';
+  document.getElementById('editParticipated').checked = data.participo === "Sí";
+  document.getElementById('editHours').value = data.participo === "Sí" ? (data.horas || 0) : 0;
+  document.getElementById('editStudies').value = data.participo === "Sí" ? (data.cursosBiblicos || 0) : 0;
+  document.getElementById('editRole').value = data.rol || 'Publicador';
+  document.getElementById('editDate').value = data.fechaEnvio || '';
+  document.getElementById('editObservations').value = data.notas || '';
+
+  // Actualizar estado de campos
+  const participationChecked = document.getElementById('editParticipated').checked;
+  document.getElementById('editHours').disabled = !participationChecked;
+  document.getElementById('editStudies').disabled = !participationChecked;
 }
 
-// Manejo del form (ACTUALIZADO CON EL NOMBRE)
 editForm.addEventListener('submit', async e => {
   e.preventDefault();
   if (!currentEditId) return;
+  
   const updates = {
-    nombre: editForm['editName'].value, // Nuevo campo
-    horas: parseFloat(editForm['editHours'].value),
-    cursosBiblicos: parseInt(editForm['editStudies'].value, 10),
-    superintendente: editForm['editGroup'].value,
-    rol: editForm['editRole'].value,
-    fechaEnvio: editForm['editDate'].value,
-    notas: editForm['editObservations'].value
+    nombre: document.getElementById('editName').value,
+    horas: parseFloat(document.getElementById('editHours').value) || 0,
+    cursosBiblicos: parseInt(document.getElementById('editStudies').value, 10) || 0,
+    superintendente: document.getElementById('editGroup').value,
+    rol: document.getElementById('editRole').value,
+    fechaEnvio: document.getElementById('editDate').value,
+    notas: document.getElementById('editObservations').value,
+    participo: document.getElementById('editParticipated').checked ? "Sí" : "No"
   };
+
   try {
     await usersRef.child(currentEditId).update(updates);
     showToast('Cambios guardados exitosamente', 'success');
@@ -304,27 +299,24 @@ editForm.addEventListener('submit', async e => {
     currentEditId = null;
     cargarInformes();
   } catch (err) {
-    console.error('Error al guardar:', err);
     showToast('Error al guardar: ' + err.message, 'error');
   }
 });
 
-// Cerrar modal al cancelar o clic fuera
-editModal.querySelector('.close-modal').addEventListener('click', () => {
-  editModal.style.display = 'none';
-  currentEditId = null;
+// Cerrar modales
+document.querySelectorAll('.close-modal').forEach(btn => {
+  btn.addEventListener('click', () => {
+    editModal.style.display = 'none';
+    currentEditId = null;
+  });
 });
+
 window.addEventListener('click', e => {
   if (e.target === editModal) {
     editModal.style.display = 'none';
     currentEditId = null;
   }
 });
-
-// Utilidades de UI
-function mostrarError(mensaje) {
-  showToast(mensaje, 'error');
-}
 
 function mostrarEstadoVacio(mensaje) {
   informesList.innerHTML = `
