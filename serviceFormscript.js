@@ -86,10 +86,10 @@ if (!serviceForm) {
            role === 'auxiliary' ? 'Precursor Auxiliar' : 'Publicador',
       horas: hoursVal,
       cursosBiblicos: parseInt(rawData['bibleCourses']) || 0,
-      participo: rawData['participated'] === 'yes' ? 'Sí' : 'No',
+      participo: (rawData['predicacion'] || 'no') === 'si' ? 'Sí' : 'No', // Validación segura
       superintendente: (rawData['superintendent'] || '').trim(),
       notas: (rawData['notes'] || '').trim(),
-      fechaEnvio: new Date().toLocaleString('es-ES') // Formato "31/3/2025 20:56:58"
+      fechaEnvio: new Date().toLocaleString('es-ES')
     };
     console.log('[serviceFormscript] Datos procesados:', formData);
 
