@@ -18,6 +18,22 @@
 </head>
 <body>
 
+    <header class="site-header">
+        <div class="header-container">
+          <a href="/Adm.html" class="logo">Administración Arrayanes</a>
+          <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+          <nav class="nav-menu">
+            <div class="nav-item"><a href="/Informes.html" class="nav-link">Informes</a></div>
+            <div class="nav-item"><a href="/Adm.html" class="nav-link active">Administración</a></div>
+            <div class="nav-item"><a href="/Historial.html" class="nav-link">Historial</a></div>
+            <div class="nav-item"><a href="/sistemaAsistencia.html" class="nav-link">Asistencia</a></div>
+            <div class="nav-item"><button class="login-btn">Iniciar Sesión</button></div>
+            <div id="userSection" class="user-section"></div>
+          </nav>
+        </div>
+      </header>
+      
+
     <div class="loading-screen">
         <div class="loading-content">
             <h1>Administración Arrayanes</h1>
@@ -162,14 +178,5 @@
         <script src="/ScriptLogin.js" type="module"></script>
 <script src="/script.js" type="module"></script>
 <script src="/secretario.js" type="module"></script>
-    
-
-<script>
-    fetch("/menuadm.html")
-        .then(response => response.text())
-        .then(data => {
-            document.body.insertAdjacentHTML("afterbegin", data);    
-        });
-    </script>
 </body>
 </html>

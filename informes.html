@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="cardsStyles.css">
     <link rel="stylesheet" href="modalelim.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
         .btn-danger {
             background-color: #dc3545;
@@ -149,6 +154,22 @@
 </head>
 <body>
 
+    <header class="site-header">
+        <div class="header-container">
+          <a href="/Adm.html" class="logo">Administración Arrayanes</a>
+          <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+          <nav class="nav-menu">
+            <div class="nav-item"><a href="/Informes.html" class="nav-link active">Informes</a></div>
+            <div class="nav-item"><a href="/Adm.html" class="nav-link">Administración</a></div>
+            <div class="nav-item"><a href="/Historial.html" class="nav-link">Historial</a></div>
+            <div class="nav-item"><a href="/sistemaAsistencia.html" class="nav-link">Asistencia</a></div>
+            <div class="nav-item"><button class="login-btn">Iniciar Sesión</button></div>
+            <div id="userSection" class="user-section"></div>
+          </nav>
+        </div>
+      </header>
+      
+
     <div class="loading-screen">
         <div class="loading-content">
             <h2>Cargando Informes</h2>
@@ -209,45 +230,7 @@
     <div class="login-modal" id="resetPasswordModal">
         <!-- Contenido del modal de recuperación de contraseña -->
     </div>
-
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
   
-    <script>
-   document.addEventListener("DOMContentLoaded", () => {
-    fetch("/menuadm.html")
-        .then(response => {
-            if (!response.ok) throw new Error("Menu not found");
-            return response.text();
-        })
-        .then(menuHtml => {
-            const menuContainer = document.createElement('div');
-            menuContainer.id = 'menu-container';
-            menuContainer.innerHTML = menuHtml;
-            document.body.insertBefore(menuContainer, document.body.firstChild);
-            
-            // Asegurar que los scripts del menú se ejecuten
-            const scripts = menuContainer.querySelectorAll('script');
-            scripts.forEach(script => {
-                const newScript = document.createElement('script');
-                if (script.src) {
-                    newScript.src = script.src;
-                } else {
-                    newScript.textContent = script.textContent;
-                }
-                document.body.appendChild(newScript);
-            });
-        })
-        .catch(error => {
-            console.error("Error loading menu:", error);
-        });
-});
-        </script>
-    
     <!-- Scripts adicionales del segundo documento -->
 <!-- <script src="/ScriptLogin.js"></script>-->   
  <!--<script src="/script.js"></script>-->
