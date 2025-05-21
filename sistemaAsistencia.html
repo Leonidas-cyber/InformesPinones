@@ -275,6 +275,30 @@
                     <p class="promedio-valor" id="promedio-mensual">0</p>
                     <p class="promedio-label">Promedio de todas las reuniones</p>
                 </div>
+
+                <div class="promedio-card">
+                    <h3>Total Asistentes Jueves</h3>
+                    <p class="promedio-valor" id="total-asistentes-jueves">0</p>
+                    <p class="promedio-label">Asistentes</p>
+                </div>
+
+                <div class="promedio-card">
+                    <h3>Reuniones Jueves</h3>
+                    <p class="promedio-valor" id="numero-reuniones-jueves">0</p>
+                    <p class="promedio-label">Reuniones</p>
+                </div>
+
+                <div class="promedio-card">
+                    <h3>Total Asistentes Domingo</h3>
+                    <p class="promedio-valor" id="total-asistentes-domingo">0</p>
+                    <p class="promedio-label">Asistentes</p>
+                </div>
+
+                <div class="promedio-card">
+                    <h3>Reuniones Domingo</h3>
+                    <p class="promedio-valor" id="numero-reuniones-domingo">0</p>
+                    <p class="promedio-label">Reuniones</p>
+                </div>
             </div>
         </div>
     </main>
@@ -446,6 +470,15 @@
                         text: 'No hay datos de asistencia para el mes seleccionado.',
                         confirmButtonColor: '#2196F3'
                     });
+                    // Clear previous results if no data
+                    document.getElementById('promedio-jueves').textContent = '0';
+                    document.getElementById('promedio-domingo').textContent = '0';
+                    document.getElementById('total-mensual').textContent = '0';
+                    document.getElementById('promedio-mensual').textContent = '0';
+                    document.getElementById('total-asistentes-jueves').textContent = '0';
+                    document.getElementById('numero-reuniones-jueves').textContent = '0';
+                    document.getElementById('total-asistentes-domingo').textContent = '0';
+                    document.getElementById('numero-reuniones-domingo').textContent = '0';
                     return;
                 }
                 
@@ -492,11 +525,17 @@
                 document.getElementById('promedio-domingo').textContent = promedioDomingo;
                 document.getElementById('total-mensual').textContent = totalMensual;
                 document.getElementById('promedio-mensual').textContent = promedioMensual;
+
+                // Mostrar resultados de las nuevas cards
+                document.getElementById('total-asistentes-jueves').textContent = totalJueves;
+                document.getElementById('numero-reuniones-jueves').textContent = countJueves;
+                document.getElementById('total-asistentes-domingo').textContent = totalDomingo;
+                document.getElementById('numero-reuniones-domingo').textContent = countDomingo;
                 
                 // Mostrar resumen en consola
                 console.log(`Resumen del mes ${mes}/${anio}:`);
-                console.log(`- Reuniones de jueves: ${countJueves} (promedio: ${promedioJueves})`);
-                console.log(`- Reuniones dominicales: ${countDomingo} (promedio: ${promedioDomingo})`);
+                console.log(`- Reuniones de jueves: ${countJueves} (promedio: ${promedioJueves}, total: ${totalJueves})`);
+                console.log(`- Reuniones dominicales: ${countDomingo} (promedio: ${promedioDomingo}, total: ${totalDomingo})`);
                 console.log(`- Reuniones especiales: ${countEspecial} (promedio: ${promedioEspecial})`);
                 console.log(`- Total reuniones: ${totalReuniones}`);
                 console.log(`- Total asistentes: ${totalMensual}`);
