@@ -89,12 +89,12 @@
 }
 
 .upload-btn {
-    background-color: #9b59b6;
+    background-color: #597eb6;
     color: white;
 }
 
 .upload-btn:hover {
-    background-color: #8e44ad;
+    background-color: #446ead;
 }
 
 .back-btn {
@@ -397,13 +397,13 @@
 }
 
 .upload-area:hover {
-    border-color: #9b59b6;
+    border-color: #4d7cff;
     background-color: #f5f0f8;
 }
 
 .upload-area i {
     font-size: 3rem;
-    color: #9b59b6;
+    color: #4d7cff;
     margin-bottom: 15px;
 }
 
@@ -413,7 +413,7 @@
 }
 
 .upload-area.active {
-    border-color: #9b59b6;
+    border-color: #4d7cff;
     background-color: #f5f0f8;
 }
 

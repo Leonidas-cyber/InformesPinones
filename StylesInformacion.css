@@ -455,8 +455,8 @@ body.dark-mode .alert-success {
 
 /* Variables CSS */
 :root {
-    --primary-color: #871bcf;
-    --accent-color: #a855f7;
+    --primary-color: #1b5acf;
+    --accent-color: #4d7cff;
     --secondary-color: #6c757d;
     --text-color: #333;
     --background-color: #f8f9fa;
