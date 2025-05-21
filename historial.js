@@ -77,12 +77,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             for (const item of result) {
                 const metadata = await item.getMetadata();
-                // const downloadUrl = await item.getDownloadURL(); // No longer needed here
-
                 storageFiles.push({
                     name: item.name,
                     fullPath: item.fullPath,
-                    // downloadUrl: downloadUrl, // No longer needed here
                     size: metadata.size,
                     timeCreated: metadata.timeCreated,
                     contentType: metadata.contentType
@@ -96,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const fileItem = document.createElement('div');
                     fileItem.className = 'storage-file-item';
 
-                    const fileInfoDiv = document.createElement('div'); // Renamed to avoid conflict
+                    const fileInfoDiv = document.createElement('div'); 
                     fileInfoDiv.className = 'storage-file-info';
 
                     const fileIcon = document.createElement('i');
@@ -120,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const downloadBtn = document.createElement('button');
                     downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
                     downloadBtn.title = 'Descargar';
-                    // Pass file.fullPath instead of file.downloadUrl
                     downloadBtn.addEventListener('click', () => downloadFile(file.fullPath, file.name));
 
                     const deleteBtn = document.createElement('button');
@@ -331,12 +327,24 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const fileRef = storage.ref(filePath);
             const url = await fileRef.getDownloadURL();
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok. Status: ${response.status} ${response.statusText}`);
+            }
+            const blob = await response.blob();
+            
+            const objectUrl = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
-            a.href = url;
+            a.href = objectUrl;
             a.download = fileName;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            
+            URL.revokeObjectURL(objectUrl);
+            
         } catch (error) {
             console.error('Error al descargar archivo:', error);
             showAlert(`Error al descargar archivo: ${error.message}`, 'error');
