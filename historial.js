@@ -99,13 +99,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     const fileIcon = document.createElement('i');
                     fileIcon.className = 'storage-file-icon fas fa-file-excel';
 
-                    const fileName = document.createElement('span');
-                    fileName.className = 'storage-file-name';
-                    fileName.textContent = file.name;
+                    const fileNameElement = document.createElement('span'); // Renamed to avoid conflict
+                    fileNameElement.className = 'storage-file-name';
+                    fileNameElement.textContent = file.name;
 
-                    const filePath = document.createElement('span');
-                    filePath.className = 'storage-file-path';
-                    filePath.textContent = file.fullPath;
+                    const filePathElement = document.createElement('span'); // Renamed for clarity
+                    filePathElement.className = 'storage-file-path';
+                    filePathElement.textContent = file.fullPath;
 
                     const fileSize = document.createElement('span');
                     fileSize.className = 'storage-file-size';
@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     fileActions.appendChild(deleteBtn);
 
                     fileInfoDiv.appendChild(fileIcon);
-                    fileInfoDiv.appendChild(fileName);
-                    fileInfoDiv.appendChild(filePath);
+                    fileInfoDiv.appendChild(fileNameElement);
+                    fileInfoDiv.appendChild(filePathElement);
 
                     fileItem.appendChild(fileInfoDiv);
                     fileItem.appendChild(fileSize);
@@ -247,9 +247,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item';
 
-            const fileName = document.createElement('div');
-            fileName.className = 'file-name';
-            fileName.textContent = file.name;
+            const fileNameElement = document.createElement('div'); // Renamed
+            fileNameElement.className = 'file-name';
+            fileNameElement.textContent = file.name;
 
             const fileSize = document.createElement('div');
             fileSize.className = 'file-size';
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
             removeIcon.addEventListener('click', () => removeFile(index));
 
             fileActions.appendChild(removeIcon);
-            fileItem.appendChild(fileName);
+            fileItem.appendChild(fileNameElement);
             fileItem.appendChild(fileSize);
             fileItem.appendChild(fileActions);
 
@@ -337,8 +337,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const objectUrl = URL.createObjectURL(blob);
             
             const a = document.createElement('a');
+            a.target = '_self'; // Set target to _self
             a.href = objectUrl;
-            a.download = fileName;
+
+            // Sanitize fileName: replace problematic characters with an underscore
+            const sanitizedFileName = fileName.replace(/[\/\\:*?"<>|]/g, '_');
+            a.download = sanitizedFileName;
+            
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
