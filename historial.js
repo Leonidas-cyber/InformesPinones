@@ -77,12 +77,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             for (const item of result) {
                 const metadata = await item.getMetadata();
-                const downloadUrl = await item.getDownloadURL();
+                // const downloadUrl = await item.getDownloadURL(); // No longer needed here
 
                 storageFiles.push({
                     name: item.name,
                     fullPath: item.fullPath,
-                    downloadUrl: downloadUrl,
+                    // downloadUrl: downloadUrl, // No longer needed here
                     size: metadata.size,
                     timeCreated: metadata.timeCreated,
                     contentType: metadata.contentType
@@ -96,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const fileItem = document.createElement('div');
                     fileItem.className = 'storage-file-item';
 
-                    const fileInfo = document.createElement('div');
-                    fileInfo.className = 'storage-file-info';
+                    const fileInfoDiv = document.createElement('div'); // Renamed to avoid conflict
+                    fileInfoDiv.className = 'storage-file-info';
 
                     const fileIcon = document.createElement('i');
                     fileIcon.className = 'storage-file-icon fas fa-file-excel';
@@ -120,7 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const downloadBtn = document.createElement('button');
                     downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
                     downloadBtn.title = 'Descargar';
-                    downloadBtn.addEventListener('click', () => downloadFile(file.downloadUrl, file.name));
+                    // Pass file.fullPath instead of file.downloadUrl
+                    downloadBtn.addEventListener('click', () => downloadFile(file.fullPath, file.name));
 
                     const deleteBtn = document.createElement('button');
                     deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
@@ -131,11 +132,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     fileActions.appendChild(downloadBtn);
                     fileActions.appendChild(deleteBtn);
 
-                    fileInfo.appendChild(fileIcon);
-                    fileInfo.appendChild(fileName);
-                    fileInfo.appendChild(filePath);
+                    fileInfoDiv.appendChild(fileIcon);
+                    fileInfoDiv.appendChild(fileName);
+                    fileInfoDiv.appendChild(filePath);
 
-                    fileItem.appendChild(fileInfo);
+                    fileItem.appendChild(fileInfoDiv);
                     fileItem.appendChild(fileSize);
                     fileItem.appendChild(fileActions);
 
@@ -326,12 +327,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 4000);
     }
 
-    function downloadFile(url, fileName) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    async function downloadFile(filePath, fileName) {
+        try {
+            const fileRef = storage.ref(filePath);
+            const url = await fileRef.getDownloadURL();
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Error al descargar archivo:', error);
+            showAlert(`Error al descargar archivo: ${error.message}`, 'error');
+        }
     }
 });
