@@ -271,6 +271,18 @@
                 </div>
                 
                 <div class="promedio-card">
+                    <h3>Total Jueves</h3>
+                    <p class="promedio-valor" id="total-jueves">0</p>
+                    <p class="promedio-label">Total asistentes</p>
+                </div>
+
+                <div class="promedio-card">
+                    <h3>Total Domingos</h3>
+                    <p class="promedio-valor" id="total-domingos">0</p>
+                    <p class="promedio-label">Total asistentes</p>
+                </div>
+
+                <div class="promedio-card">
                     <h3>Promedio General</h3>
                     <p class="promedio-valor" id="promedio-mensual">0</p>
                     <p class="promedio-label">Promedio de todas las reuniones</p>
@@ -488,6 +500,8 @@
                 const promedioMensual = totalReuniones > 0 ? Math.round(totalMensual / totalReuniones) : 0;
                 
                 // Mostrar resultados
+                document.getElementById('total-jueves').textContent = totalJueves;
+                document.getElementById('total-domingos').textContent = totalDomingo;
                 document.getElementById('promedio-jueves').textContent = promedioJueves;
                 document.getElementById('promedio-domingo').textContent = promedioDomingo;
                 document.getElementById('total-mensual').textContent = totalMensual;
