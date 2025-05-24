@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Descargar Informes de Grupo</title>
+</head>
+<body>
+  <h1>Descargar Informes de Grupo</h1>
+
+  <label for="groupNameInput">Nombre del Grupo:</label>
+  <input type="text" id="groupNameInput">
+
+  <button id="downloadReportBtn">Descargar Informe</button>
+
+  <div id="messageArea"></div>
+
+  <!-- Firebase App (Core) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <!-- Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script type="module" src="descargarinformes_logic.js"></script>
+</body>
+</html>
