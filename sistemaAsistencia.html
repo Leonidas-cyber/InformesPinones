@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Asistencia - Congregación Arrayanes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <style>
+        .asistencia-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .asistencia-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #0b7dda;
+        }
+
+        .estadisticas-container {
+            margin-top: 30px;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .resultados {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .promedio-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .promedio-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .promedio-valor {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #2196F3;
+        }
+
+        .promedio-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .resultados {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .filtros {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .resultados {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-container">
+          <a href="/Adm.html" class="logo">Administración Arrayanes</a>
+          <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+          <nav class="nav-menu">
+            <div class="nav-item"><a href="/Informes.html" class="nav-link">Informes</a></div>
+            <div class="nav-item"><a href="/Adm.html" class="nav-link">Administración</a></div>
+            <div class="nav-item"><a href="/Historial.html" class="nav-link">Historial</a></div>
+            <div class="nav-item"><a href="/sistemaAsistencia.html" class="nav-link active">Asistencia</a></div>
+            <div class="nav-item"><button class="login-btn">Iniciar Sesión</button></div>
+            <div id="userSection" class="user-section"></div>
+          </nav>
+        </div>
+      </header>
+      
+
+    <div class="loading-screen">
+        <div class="loading-content">
+            <h1>Sistema de Asistencia Arrayanes</h1>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <div id="menu-container"></div>
+
+    <main class="asistencia-container">
+        <h1>Registro de Asistencia</h1>
+        
+        <div class="asistencia-form">
+            <div class="form-group">
+                <label for="fecha-asistencia">Fecha:</label>
+                <input type="date" id="fecha-asistencia" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="tipo-reunion">Tipo de Reunión:</label>
+                <select id="tipo-reunion" required>
+                    <option value="">Seleccione...</option>
+                    <option value="domingo">Reunión de Fin de Semana</option>
+                    <option value="jueves">Reunión de Entre Semana</option>
+                    <option value="especial">Reunión Especial</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="asistentes">Número de Asistentes:</label>
+                <input type="number" id="asistentes" min="0" required>
+            </div>
+            
+            <button id="btn-registrar" class="btn-primary">Registrar Asistencia</button>
+        </div>
+        
+        <div class="estadisticas-container">
+            <h2>Estadísticas Mensuales</h2>
+            <div class="filtros">
+                <label for="mes-estadisticas">Mes:</label>
+                <select id="mes-estadisticas">
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+                
+                <label for="anio-estadisticas">Año:</label>
+                <select id="anio-estadisticas"></select>
+                
+                <button id="btn-calcular" class="btn-secondary">Calcular Promedios</button>
+            </div>
+            
+            <div class="resultados">
+                <div class="promedio-card">
+                    <h3>Reuniones de Entre Semana</h3>
+                    <p class="promedio-valor" id="promedio-jueves">0</p>
+                    <p class="promedio-label">Promedio de asistentes</p>
+                </div>
+                
+                <div class="promedio-card">
+                    <h3>Reuniones de Fin de Semana</h3>
+                    <p class="promedio-valor" id="promedio-domingo">0</p>
+                    <p class="promedio-label">Promedio de asistentes</p>
+                </div>
+                
+                <div class="promedio-card">
+                    <h3>Total Mensual</h3>
+                    <p class="promedio-valor" id="total-mensual">0</p>
+                    <p class="promedio-label">Total de asistentes</p>
+                </div>
+                
+                <div class="promedio-card">
+                    <h3>Promedio General</h3>
+                    <p class="promedio-valor" id="promedio-mensual">0</p>
+                    <p class="promedio-label">Promedio de todas las reuniones</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Configuración de Firebase (reemplaza con tus propios datos)
+        const firebaseConfig = {
+            apiKey: "AIzaSyANSEcsrnbzVJ8i6-eOqv-pewPaeImdORg",
+            authDomain: "pinones-congre.firebaseapp.com",
+            databaseURL: "https://pinones-congre-default-rtdb.firebaseio.com",
+            projectId: "pinones-congre",
+            storageBucket: "pinones-congre.appspot.com",
+            messagingSenderId: "1031984043314",
+            appId: "1:1031984043314:web:49b38b2c60d69601d3732b",
+            measurementId: "G-SR373KE6RX"
+        };
+
+        // Inicializar Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ocultar pantalla de carga
+            setTimeout(() => {
+                document.querySelector('.loading-screen').style.display = 'none';
+            }, 1000);
+            
+            // Configurar año actual y anteriores en el select
+            const anioSelect = document.getElementById('anio-estadisticas');
+            const currentYear = new Date().getFullYear();
+            
+            for (let year = currentYear; year >= currentYear - 5; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === currentYear) option.selected = true;
+                anioSelect.appendChild(option);
+            }
+            
+            // Configurar fecha actual como valor por defecto
+            const fechaInput = document.getElementById('fecha-asistencia');
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            fechaInput.value = formattedDate;
+            
+            // Configurar mes actual en los filtros
+            const currentMonth = new Date().getMonth() + 1;
+            document.getElementById('mes-estadisticas').value = currentMonth;
+            
+            // Eventos
+            document.getElementById('btn-registrar').addEventListener('click', registrarAsistencia);
+            document.getElementById('btn-calcular').addEventListener('click', calcularPromedios);
+        });
+
+        async function registrarAsistencia() {
+            const fecha = document.getElementById('fecha-asistencia').value;
+            const tipoReunion = document.getElementById('tipo-reunion').value;
+            const asistentes = parseInt(document.getElementById('asistentes').value);
+            
+            if (!fecha || !tipoReunion || isNaN(asistentes)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos incompletos',
+                    text: 'Por favor complete todos los campos correctamente.',
+                    confirmButtonColor: '#4CAF50'
+                });
+                return;
+            }
+            
+            try {
+                const fechaObj = new Date(fecha);
+                
+                // Verificar si la fecha coincide con el tipo de reunión seleccionado
+                const diaSemana = fechaObj.getDay(); // 0=Domingo, 1=Lunes, ..., 6=Sábado
+                
+                if ((tipoReunion === 'domingo' && diaSemana !== 0) || 
+                    (tipoReunion === 'jueves' && diaSemana !== 4)) {
+                    const { value: confirmacion } = await Swal.fire({
+                        icon: 'warning',
+                        title: 'Advertencia',
+                        html: `Estás registrando una reunión de <strong>${tipoReunion}</strong> en un día que no corresponde.<br>¿Deseas continuar?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, continuar',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor: '#4CAF50',
+                        cancelButtonColor: '#f44336'
+                    });
+                    
+                    if (!confirmacion) return;
+                }
+                
+                // Crear objeto de asistencia
+                const asistenciaData = {
+                    fecha: fecha,
+                    tipoReunion: tipoReunion,
+                    asistentes: asistentes,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    mes: fechaObj.getMonth() + 1, // Mes (1-12)
+                    anio: fechaObj.getFullYear(),
+                    diaSemana: diaSemana // Guardamos el día de la semana numérico
+                };
+                
+                // Mostrar loading mientras se guarda
+                Swal.fire({
+                    title: 'Registrando asistencia...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Guardar en Firestore
+                await db.collection('asistencias').add(asistenciaData);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Asistencia registrada correctamente',
+                    confirmButtonColor: '#4CAF50',
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+                
+                document.getElementById('asistentes').value = '';
+                
+                // Actualizar estadísticas
+                calcularPromedios();
+            } catch (error) {
+                console.error('Error al registrar asistencia:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al registrar la asistencia.',
+                    confirmButtonColor: '#f44336'
+                });
+            }
+        }
+
+        async function calcularPromedios() {
+            const mes = parseInt(document.getElementById('mes-estadisticas').value);
+            const anio = parseInt(document.getElementById('anio-estadisticas').value);
+            
+            try {
+                // Mostrar loading mientras se cargan los datos
+                Swal.fire({
+                    title: 'Calculando promedios...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                const snapshot = await db.collection('asistencias')
+                    .where('mes', '==', mes)
+                    .where('anio', '==', anio)
+                    .orderBy('fecha')
+                    .get();
+                
+                if (snapshot.empty) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Sin datos',
+                        text: 'No hay datos de asistencia para el mes seleccionado.',
+                        confirmButtonColor: '#2196F3'
+                    });
+                    return;
+                }
+                
+                let totalJueves = 0;
+                let countJueves = 0;
+                let totalDomingo = 0;
+                let countDomingo = 0;
+                let totalEspecial = 0;
+                let countEspecial = 0;
+                let totalMensual = 0;
+                let totalReuniones = 0;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const asistentes = data.asistentes;
+                    
+                    totalMensual += asistentes;
+                    totalReuniones++;
+                    
+                    switch(data.tipoReunion) {
+                        case 'jueves':
+                            totalJueves += asistentes;
+                            countJueves++;
+                            break;
+                        case 'domingo':
+                            totalDomingo += asistentes;
+                            countDomingo++;
+                            break;
+                        case 'especial':
+                            totalEspecial += asistentes;
+                            countEspecial++;
+                            break;
+                    }
+                });
+                
+                // Calcular promedios
+                const promedioJueves = countJueves > 0 ? Math.round(totalJueves / countJueves) : 0;
+                const promedioDomingo = countDomingo > 0 ? Math.round(totalDomingo / countDomingo) : 0;
+                const promedioEspecial = countEspecial > 0 ? Math.round(totalEspecial / countEspecial) : 0;
+                const promedioMensual = totalReuniones > 0 ? Math.round(totalMensual / totalReuniones) : 0;
+                
+                // Mostrar resultados
+                document.getElementById('promedio-jueves').textContent = promedioJueves;
+                document.getElementById('promedio-domingo').textContent = promedioDomingo;
+                document.getElementById('total-mensual').textContent = totalMensual;
+                document.getElementById('promedio-mensual').textContent = promedioMensual;
+                
+                // Mostrar resumen en consola
+                console.log(`Resumen del mes ${mes}/${anio}:`);
+                console.log(`- Reuniones de jueves: ${countJueves} (promedio: ${promedioJueves})`);
+                console.log(`- Reuniones dominicales: ${countDomingo} (promedio: ${promedioDomingo})`);
+                console.log(`- Reuniones especiales: ${countEspecial} (promedio: ${promedioEspecial})`);
+                console.log(`- Total reuniones: ${totalReuniones}`);
+                console.log(`- Total asistentes: ${totalMensual}`);
+                console.log(`- Promedio general: ${promedioMensual}`);
+                
+                // Cerrar loading
+                Swal.close();
+                
+            } catch (error) {
+                console.error('Error al calcular promedios:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al calcular los promedios.',
+                    confirmButtonColor: '#f44336'
+                });
+            }
+        }
+    </script>
+    <script src="/ScriptLogin.js" type="module"></script>
+    <script src="/script.js" type="module"></script>
+
+</body>
+</html>

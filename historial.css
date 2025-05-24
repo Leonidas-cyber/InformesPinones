@@ -1,0 +1,688 @@
+        /* Estilos para la página de historial - Congregación Arrayanes */
+
+/* Contenedor principal y estilos generales */
+.historial-controls {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.filter-control {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.date-custom-range {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Botones */
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.historial-btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.primary-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: #45a049;
+}
+
+.secondary-btn {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.secondary-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.export-btn {
+    background-color: #3498db;
+    color: white;
+}
+
+.export-btn:hover {
+    background-color: #2980b9;
+}
+
+.upload-btn {
+    background-color: #597eb6;
+    color: white;
+}
+
+.upload-btn:hover {
+    background-color: #446ead;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background-color: #f1f1f1;
+    color: #333;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 30px;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* Tabla de Resultados */
+.historial-results {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.results-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-controls select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.historial-table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.historial-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.historial-table th, 
+.historial-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.historial-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+    position: sticky;
+    top: 0;
+}
+
+.sortable {
+    cursor: pointer;
+}
+
+.sortable i {
+    margin-left: 5px;
+    opacity: 0.5;
+}
+
+.sorting-asc i.fa-sort:before {
+    content: "\f0de"; /* fa-sort-up */
+    opacity: 1;
+}
+
+.sorting-desc i.fa-sort:before {
+    content: "\f0dd"; /* fa-sort-down */
+    opacity: 1;
+}
+
+.historial-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.historial-table .btn-detail {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.historial-table .btn-detail:hover {
+    background-color: #e0e0e0;
+}
+
+/* Estados de carga y sin resultados */
+.no-results, .historial-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #777;
+    text-align: center;
+}
+
+.no-results i, .historial-loading i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.historial-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #4CAF50;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.page-btn {
+    padding: 8px 15px;
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+}
+
+.page-number {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-number:hover {
+    background-color: #e0e0e0;
+}
+
+.page-number.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Modal de detalles de actividad */
+.activity-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.activity-modal.active {
+    display: flex;
+}
+
+.activity-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.activity-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.activity-modal-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #777;
+}
+
+.activity-modal-body {
+    padding: 20px;
+}
+
+.activity-modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.activity-detail-item {
+    margin-bottom: 15px;
+}
+
+.activity-detail-item h4 {
+    margin: 0 0 5px 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+.activity-detail-content {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+/* Sección de subida de archivos */
+.upload-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: #4d7cff;
+    background-color: #f5f0f8;
+}
+
+.upload-area i {
+    font-size: 3rem;
+    color: #4d7cff;
+    margin-bottom: 15px;
+}
+
+.upload-area p {
+    margin: 0;
+    color: #555;
+}
+
+.upload-area.active {
+    border-color: #4d7cff;
+    background-color: #f5f0f8;
+}
+
+#fileInput {
+    display: none;
+}
+
+.file-info {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.file-list {
+    margin-top: 20px;
+}
+
+.file-list h4 {
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-name {
+    flex: 1;
+}
+
+.file-size {
+    color: #777;
+    margin-right: 15px;
+}
+
+.file-actions i {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #777;
+}
+
+.file-actions i:hover {
+    color: #333;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .filter-group {
+        width: 100%;
+    }
+    
+    .date-custom-range {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .historial-table th, 
+    .historial-table td {
+        padding: 10px;
+    }
+    
+    .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .button-group {
+        width: 100%;
+    }
+    
+    .historial-btn {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .upload-area {
+        padding: 20px 10px;
+    }
+}
+
+/* Estilos para la lista de archivos en Storage */
+.storage-files-container {
+    margin-top: 30px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.storage-files-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.storage-files-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.storage-file-list {
+    margin-top: 15px;
+}
+
+.storage-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.storage-file-item:hover {
+    background-color: #f9f9f9;
+}
+
+.storage-file-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.storage-file-icon {
+    margin-right: 10px;
+    color: #555;
+}
+
+.storage-file-name {
+    font-weight: 500;
+}
+
+.storage-file-path {
+    font-size: 0.8em;
+    color: #777;
+    margin-left: 10px;
+}
+
+.storage-file-size {
+    color: #777;
+    margin-right: 15px;
+}
+
+.storage-file-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    margin-left: 10px;
+    transition: color 0.2s;
+}
+
+.storage-file-actions button:hover {
+    color: #3498db;
+}
+
+.storage-file-actions button.delete-btn:hover {
+    color: #e74c3c;
+}
+
+.storage-loading {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.storage-empty {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.storage-empty i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+/* Modal de confirmación de eliminación */
+.delete-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-modal.active {
+    display: flex;
+}
+
+.delete-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.delete-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff3cd;
+}
+
+.delete-modal-header h3 {
+    margin: 0;
+    color: #856404;
+    font-size: 1.2rem;
+}
+
+.delete-modal-header i.fa-exclamation-triangle {
+    color: #ffc107;
+    margin-right: 10px;
+}
+
+.delete-modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.delete-modal-body p {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.file-name-confirm {
+    font-weight: 600;
+    color: #dc3545;
+    word-break: break-all;
+}
+
+.delete-modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.danger-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.danger-btn:hover {
+    background-color: #c82333;
+}

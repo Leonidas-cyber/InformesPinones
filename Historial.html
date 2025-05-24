@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - Congregación Arrayanes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="StylesInformacion.css">
+    <link rel="stylesheet" href="stylesAdm.css">
+    <link rel="stylesheet" href="secretario.css">
+    <link rel="stylesheet" href="historial.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+          <a href="/Adm.html" class="logo">Administración Arrayanes</a>
+          <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+          <nav class="nav-menu">
+            <div class="nav-item"><a href="/Informes.html" class="nav-link">Informes</a></div>
+            <div class="nav-item"><a href="/Adm.html" class="nav-link">Administración</a></div>
+            <div class="nav-item"><a href="/Historial.html" class="nav-link active">Historial</a></div>
+            <div class="nav-item"><a href="/sistemaAsistencia.html" class="nav-link">Asistencia</a></div>
+            <div class="nav-item"><button class="login-btn">Iniciar Sesión</button></div>
+            <div id="userSection" class="user-section"></div>
+          </nav>
+        </div>
+      </header>
+      
+
+    <div class="loading-screen">
+        <div class="loading-content">
+            <h1>Historial Arrayanes</h1>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="content admin-container">
+            <h1 class="admin-title">Historial de Actividades</h1>
+            <p>Consulta y filtra los registros históricos de la congregación</p>
+
+            <div class="admin-alert" id="historialAlert"></div>
+
+            <!-- Sección para subir informes anteriores -->
+            <div class="upload-section">
+                <h2><i class="fas fa-file-excel"></i> Subir Informes Anteriores</h2>
+                <p>Sube archivos Excel con informes desde marzo 2025</p>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Arrastra y suelta tus archivos Excel aquí o haz clic para seleccionar</p>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls" multiple>
+                    <div class="file-info" id="fileInfo">No se han seleccionado archivos</div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="uploadFiles" class="historial-btn upload-btn" disabled>
+                        <i class="fas fa-upload"></i> Subir Archivos
+                    </button>
+                </div>
+                
+                <div class="file-list" id="fileListContainer" style="display: none;">
+                    <h4>Archivos seleccionados:</h4>
+                    <div id="fileList"></div>
+                </div>
+            </div>
+
+
+            <!-- Sección para mostrar archivos en Storage -->
+            <div class="storage-files-container">
+                <div class="storage-files-header">
+                    <h3><i class="fas fa-folder-open"></i> Archivos en Storage</h3>
+                    <button id="refreshStorage" class="historial-btn secondary-btn">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
+                
+                <div class="storage-file-list" id="storageFileList">
+                    <!-- Los archivos de Storage se cargarán aquí -->
+                </div>
+                
+                <div class="storage-loading" id="storageLoading" style="display: none;">
+                    <div class="historial-spinner"></div>
+                    <p>Cargando archivos...</p>
+                </div>
+                
+                <div class="storage-empty" id="storageEmpty" style="display: none;">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No se encontraron archivos en el Storage</p>
+                </div>
+            </div>
+
+            <!-- Detalles de actividad modal -->
+            <div id="activityDetailModal" class="activity-modal">
+                <div class="activity-modal-content">
+                    <div class="activity-modal-header">
+                        <h3>Detalles de la Actividad</h3>
+                        <button class="close-modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="activity-modal-body" id="activityModalBody">
+                        <!-- Los detalles se cargarán dinámicamente aquí -->
+                    </div>
+                    <div class="activity-modal-footer">
+                        <button class="historial-btn secondary-btn close-modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de confirmación de eliminación -->
+            <div id="deleteModal" class="delete-modal">
+                <div class="delete-modal-content">
+                    <div class="delete-modal-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Confirmar eliminación</h3>
+                        <button class="close-delete-modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="delete-modal-body">
+                        <p>¿Estás seguro de que deseas eliminar este archivo permanentemente?</p>
+                        <p class="file-name-confirm"></p>
+                    </div>
+                    <div class="delete-modal-footer">
+                        <button class="historial-btn secondary-btn cancel-delete">Cancelar</button>
+                        <button class="historial-btn danger-btn confirm-delete">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de volver -->
+            <div class="back-section">
+                <a href="./Adm.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Volver a Administración
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js" type="module"></script>
+    <script src="/ScriptLogin.js" type="module"></script>
+    <script src="/historial.js"></script>
+</body>
+</html>
