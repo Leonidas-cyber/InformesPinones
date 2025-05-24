@@ -14,6 +14,31 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Mostrar botón Debug solo para un correo específico
+        // Agregar esta función después de la inicialización de Firebase
+
+        function checkAdminAccess() {
+            firebase.auth().onAuthStateChanged((user) => {
+                const debugBtn = document.getElementById('debugBtn');
+                
+                // Email del único administrador autorizado
+                const adminEmail = 'leonidas13456@gmail.com'; // CAMBIAR POR TU EMAIL
+                
+                if (user && user.email === adminEmail) {
+                    debugBtn.style.display = 'inline-block'; // Mostrar solo para el admin
+                    console.log('🔧 Administrador autorizado: Botón debug habilitado');
+                } else {
+                    debugBtn.style.display = 'none'; // Ocultar para todos los demás
+                }
+            });
+        }
+
+        // Llamar la función al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAccess();
+            // ... resto de tu código de inicialización
+        });
+
         // Lista completa de miembros organizados por grupos
         const groupsData = {
             1: {
@@ -24,7 +49,7 @@
                     "Elvira Rosales", "Rocío Urban", "Dolores Ventura", "Rocío González",
                     "Denise de Sanchez", "Ruth Garcia", "Maria Eugenia Rosette", "Fernando Vazquez",
                     "Fany Vazquez", "Luis Vazquez", "Gloria de Gonzalez", "Camila Gonzalez",
-                    "Marisol Cortez", "Clara Morales"
+                    "Marisol Cortez", "Maria Q. Moralez Hortega"
                 ]
             },
             2: {
