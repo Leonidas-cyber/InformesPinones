@@ -43,7 +43,7 @@ const groupsData = {
         supervisor: "Abraham González",
         members: [
             "Abraham González", "Oscar Sanchez", "Violeta Gómez de González", "Karina Alfaro",
-            "Elvira Rosales", "Rocío Urban", "Dolores Ventura", "Rocío Gonzáles",
+            "Elvira Rosales", "Rocío Urban", "Dolores Ventura", "Rocío González García",
             "Denise de Sanchez", "Ruth Garcia", "Maria Eugenia Rosette", "Juan Fernando Vazquez",
             "Fany Vazquez", "Luis Fernando Vazquez", "Gloria de Gonzalez", "Camila Gonzalez",
             "Marisol Cortez", "Maria Q. Moralez Hortega"
@@ -54,9 +54,9 @@ const groupsData = {
         supervisor: "Rafael Gómez",
         members: [
             "Rafael Gómez", "Jose Valentin Callejas", "Mariela Morales de Gómez", "Esperanza Callejas",
-            "Socorro Torres", "Xavier Valencia", "Lilia Salas", "Maira Osorio",
+            "Maria del Socorro Torres Cedillo", "Xavier Valencia", "Lilia Salas", "Maira Osorio",
             "Guillermo Barrios", "Dulce Barrios", "Rocio Hernandez de Barrios", "Silvia Reyes",
-            "Claudia Cornejo", "Rosalinda Abasolo", "Patricia Matamoros", "Paola Cornejo",
+            "Claudia Cornejo", "Rosalinda Cruz Sosa de Abasolo", "Patricia Matamoros", "Paola Cornejo",
             "Dominga Ventura", "Monserrat Caro del Castillo"
         ]
     },
@@ -67,7 +67,7 @@ const groupsData = {
             "David Novoa", "Uriel Salazar", "Rosa María Pérez de Novoa", "Nayely Peredo de Salazar",
             "Susana Acosta", "Alejandro Juarez", "Eduardo Lopez", "Norma de Lopez",
             "Angelica Lopez", "Anselmo Aco", "Veronica de Aco", "Fernanda Aco",
-            "Daniel Aco", "Blanca de Montoya", "Manolo Montoya", "Jose Luis Lopez",
+            "Daniel Aco", "Blanca de Montoya", "Manolo Montoya", "José Luis López Fernández",
             "Amparo Gonzalez", "Elia Gonzalez"
         ]
     },
@@ -75,10 +75,10 @@ const groupsData = {
         name: "Grupo 4",
         supervisor: "Rogelio Teliz",
         members: [
-            "Rogelio Teliz", "Kevin Rico", "Andrea Teliz", "Jenifer Rico",
+            "Rogelio Teliz", "Kevin Rico", "Andrea Teliz", "Jenniffer Rico",
             "Carolina Monroy", "Mary Patron", "María Estela Ramirez de Silva", "Carmen Garcia",
-            "Bertha Chino", "Cesia Malpica", "Zohara Malpica", "Scarlett Malpica",
-            "Mireya Franco de Gonzalez", "Rosario Medina de Ovalle", "Susana Alvarado Rodriguez",
+            "Bertha Chino", "Cesiah Malpica", "Zohara Malpica", "Scarlett Malpica",
+            "Mireya Franco de Gonzalez", "Maria del Rosario Ovalle Rosas", "Susana Alvarado Rodriguez",
             "Antonio Carlin", "Enriqueta Lopez de Carlin", "Delia Diaz"
         ]
     },
@@ -89,7 +89,7 @@ const groupsData = {
             "Alberto Glez. Pacheco", "Gabriel Diaz Tena", "Mireya García de Diaz", "Grizelda de Vazquez",
             "Moises Vazquez", "Jaziel Vazquez", "Abigail Vazquez", "Dinorah Cornejo",
             "Irma de Diaz", "Irma de Cruz", "Miguel Diaz", "Sabino Martinez",
-            "Nadia Martinez", "María Estela Ortega Rodriguez", "Leonardo Glez Pacheco", "Blanca Aguilera de Flores",
+            "Nadia Diaz Campillo", "María Estela Ortega Rodriguez", "Leonardo Glez Pacheco", "Blanca Aguilera de Flores",
             "Sebastian Cruz", "Alejandra Martinez de Hdez."
         ]
     }
