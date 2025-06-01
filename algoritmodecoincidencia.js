@@ -39,64 +39,64 @@
             // ... resto de tu código de inicialización
         });
 
-        // Lista completa de miembros organizados por grupos
-        const groupsData = {
-            1: {
-                name: "Grupo 1",
-                supervisor: "Abraham González",
-                members: [
-                    "Abraham González", "Oscar Sanchez", "Violeta de González", "Karina Alfaro",
-                    "Elvira Rosales", "Rocío Urban", "Dolores Ventura", "Rocío González",
-                    "Denise de Sanchez", "Ruth Garcia", "Maria Eugenia Rosette", "Fernando Vazquez",
-                    "Fany Vazquez", "Luis Vazquez", "Gloria de Gonzalez", "Camila Gonzalez",
-                    "Marisol Cortez", "Maria Q. Moralez Hortega"
-                ]
-            },
-            2: {
-                name: "Grupo 2",
-                supervisor: "Rafael Gómez",
-                members: [
-                    "Rafael Gómez", "Jose Valentin Callejas", "Mariela de Gómez", "Esperanza Callejas",
-                    "Socorro Torres", "Xavier Valencia", "Lilia Salas", "Maira Osorio",
-                    "Guillermo Barrios", "Dulce Barrios", "Rocio Hernandez", "Silvia Reyes",
-                    "Claudia Cornejo", "Rosalinda Abasolo", "Patricia Matamoros", "Paola Cornejo",
-                    "Dominga Ventura"
-                ]
-            },
-            3: {
-                name: "Grupo 3",
-                supervisor: "David Novoa",
-                members: [
-                    "David Novoa", "Uriel Salazar", "Rosa de Novoa", "Nayely Peredo",
-                    "Susana Acosta", "Eduardo Lopez", "Norma de Lopez", "Angelica Lopez",
-                    "Anselmo Aco", "Veronica de Aco", "Fernanda Aco", "Daniel Aco",
-                    "Blanca de Montoya", "Manolo Montoya", "Jose Luis Lopez", "Amparo Gonzalez",
-                    "Elia Gonzalez"
-                ]
-            },
-            4: {
-                name: "Grupo 4",
-                supervisor: "Rogelio Teliz",
-                members: [
-                    "Rogelio Teliz", "Kevin Rico", "Andrea Teliz", "Jennifer Rico",
-                    "Carolina Monroy", "Mary Patron", "Estela de Silva", "Carmen Garcia",
-                    "Bertha Chino", "Cesia Malpica", "Soara Malpica", "Blanca Aguilera",
-                    "Rosario de Ovalle", "Susana Alvarado", "Antonio Carlin", "Enriqueta de Carlin",
-                    "Delia Diaz"
-                ]
-            },
-            5: {
-                name: "Grupo 5",
-                supervisor: "Alberto Glez.Pacheco",
-                members: [
-                    "Alberto Glez.Pacheco", "Gabriel Diaz", "Mireya de Diaz", "Grizelda de Vazquez",
-                    "Moises Vazquez", "Jaziel Vazquez", "Abigail Vazquez", "Dinora Cornejo",
-                    "Irma de Diaz", "Irma de Cruz", "Miguel Diaz", "Sabino Martinez",
-                    "Nadia Martinez", "Estela Ortega", "Leonardo Glez.Pacheco", "Mireya de Gonzalez",
-                    "Sebastian Cruz", "Susana Martinez de Hdz."
-                ]
-            }
-        };
+  // Lista completa de miembros organizados por grupos
+const groupsData = {
+    1: {
+        name: "Grupo 1",
+        supervisor: "Abraham González",
+        members: [
+            "Abraham González", "Oscar Sanchez", "Violeta Gómez de González", "Karina Alfaro",
+            "Elvira Rosales", "Rocío Urban", "Dolores Ventura", "Rocío Gonzáles",
+            "Denise de Sanchez", "Ruth Garcia", "Maria Eugenia Rosette", "Fernando Vazquez",
+            "Fany Vazquez", "Luis Vazquez", "Gloria de Gonzalez", "Camila Gonzalez",
+            "Marisol Cortez", "Maria Q. Moralez Hortega"
+        ]
+    },
+    2: {
+        name: "Grupo 2",
+        supervisor: "Rafael Gómez",
+        members: [
+            "Rafael Gómez", "Jose Valentin Callejas", "Mariela Morales de Gómez", "Esperanza Callejas",
+            "Socorro Torres", "Xavier Valencia", "Lilia Salas", "Maira Osorio",
+            "Guillermo Barrios", "Dulce Barrios", "Rocio Hernandez", "Silvia Reyes",
+            "Claudia Cornejo", "Rosalinda Abasolo", "Patricia Matamoros", "Paola Cornejo",
+            "Dominga Ventura", "Monserrat Caro del Castillo"
+        ]
+    },
+    3: {
+        name: "Grupo 3",
+        supervisor: "David Novoa",
+        members: [
+            "David Novoa", "Uriel Salazar", "Rosa María Pérez de Novoa", "Nayely Peredo de Salazar",
+            "Susana Acosta", "Alejandro Juarez", "Eduardo Lopez", "Norma de Lopez",
+            "Angelica Lopez", "Anselmo Aco", "Veronica de Aco", "Fernanda Aco",
+            "Daniel Aco", "Blanca de Montoya", "Manolo Montoya", "Jose Luis Lopez",
+            "Amparo Gonzalez", "Elia Gonzalez"
+        ]
+    },
+    4: {
+        name: "Grupo 4",
+        supervisor: "Rogelio Teliz",
+        members: [
+            "Rogelio Teliz", "Kevin Rico", "Andrea Teliz", "Jenifer Rico",
+            "Carolina Monroy", "Mary Patron", "Estela Ramirez de Silva", "Carmen Garcia",
+            "Bertha Chino", "Cesia Malpica", "Soara Malpica", "Scarlett Malpica",
+            "Mireya Franco de Gonzalez", "Rosario Medina de Ovalle", "Susana Alvarado",
+            "Antonio Carlin", "Enriqueta Lopez de Carlin", "Delia Diaz"
+        ]
+    },
+    5: {
+        name: "Grupo 5",
+        supervisor: "Alberto Glez. Pacheco",
+        members: [
+            "Alberto Glez. Pacheco", "Gabriel Diaz Tena", "Mireya de Diaz", "Grizelda de Vazquez",
+            "Moises Vazquez", "Jaziel Vazquez", "Abigail Vazquez", "Dinora Cornejo",
+            "Irma de Diaz", "Irma de Cruz", "Miguel Diaz", "Sabino Martinez",
+            "Nadia Martinez", "Estela Ortega", "Leonardo Glez Pacheco", "Blanca Aguilera de Flores",
+            "Sebastian Cruz", "Alejandra Martinez de Hdez."
+        ]
+    }
+};
 
         let deliveredReports = new Set();
 
