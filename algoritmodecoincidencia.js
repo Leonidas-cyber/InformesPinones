@@ -64,7 +64,7 @@ const groupsData = {
         name: "Grupo 3",
         supervisor: "David Novoa",
         members: [
-            "David Novoa", "Uriel Salazar", "Rosa María Pérez de Novoa", "Ruth Nayely Peredo Romero de Salazar",
+            "David Novoa", "Uriel Salazar", "Rosa María Pérez de Novoa", "Ruth Nayeli Peredo Romero de Salazar",
             "Susana Acosta", "Alejandro Juarez", "Eduardo Lopez", "Norma de Lopez",
             "Angelica Lopez", "Anselmo Aco", "Veronica de Aco", "Fernanda Aco",
             "Daniel Aco", "Blanca de Montoya", "Manolo Montoya", "José Luis López Fernández",
