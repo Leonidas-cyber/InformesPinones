@@ -76,7 +76,7 @@ const groupsData = {
         supervisor: "Rogelio Teliz",
         members: [
             "Rogelio Teliz", "Kevin Rico", "Andrea Teliz", "Jenniffer Rico",
-            "Carolina Monroy", "Mary Patron", "María Estela Ramirez de Silva", "Carmen Garcia",
+            "Carolina Monroy", "María Patron Romano", "María Estela Ramirez de Silva", "Carmen Garcia",
             "Bertha Chino", "Cesiah Malpica", "Zohara Malpica", "Scarlett Malpica",
             "Mireya Franco de Gonzalez", "Maria del Rosario Ovalle Rosas", "Susana Alvarado Rodriguez",
             "Antonio Carlin", "Enriqueta Lopez de Carlin", "Delia Diaz"
