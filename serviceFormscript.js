@@ -33,9 +33,11 @@ if (!serviceForm) {
       if (noticeEl) noticeEl.style.display = 'block';
       if (roleSelect.value === 'publisher') {
         hoursInput.disabled = true;
+        hoursInput.required = false;
         hoursInput.value = '';
       } else {
         hoursInput.disabled = false;
+        hoursInput.required = true;
       }
     });
   }
