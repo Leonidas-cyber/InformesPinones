@@ -260,3 +260,17 @@ input[type="radio"]:focus-visible {
   #forgotPasswordModal .login-footer a:hover {
       text-decoration: underline;
   }
+
+@media screen and (max-width: 767px) {
+  .login-modal input[type="text"],
+  .login-modal input[type="email"],
+  .login-modal input[type="password"] {
+    border: 2px solid #999;
+  }
+
+  .login-modal input[type="text"]:focus,
+  .login-modal input[type="email"]:focus,
+  .login-modal input[type="password"]:focus {
+    border-color: #1b5acf;
+  }
+}
