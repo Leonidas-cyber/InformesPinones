@@ -539,6 +539,11 @@ body.dark-mode .role-notice {
     .form-control, .form-select {
         padding: 12px;
         font-size: 16px; /* Evita zoom automático en iOS */
+        border: 2px solid #999;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
     }
     
     /* Ajustes para botones táctiles */
