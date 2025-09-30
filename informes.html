@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informes - Congregación Arrayanes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="StylesInformacion.css">
+    <link rel="stylesheet" href="stylesAdm.css">
+    <link rel="stylesheet" href="cardsStyles.css">
+    <link rel="stylesheet" href="modalelim.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #bb2d3b;
+        }
+
+        #passwordPromptModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        #passwordPromptModal .modal-content {
+            background: white;
+            width: 300px;
+            padding: 20px;
+            margin: 100px auto;
+            border-radius: 5px;
+        }
+        
+        /* Estilo para el switch de participación */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Estilos para el modal de edición */
+#editReportModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+#editReportModal .modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+  <div class="header-container">
+    <a href="/Adm.html" class="logo">Administración Arrayanes</a>
+    <button class="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <nav class="nav-menu">
+      <div class="nav-item"><a href="/Informes.html" class="nav-link">Informes</a></div>
+      <div class="nav-item"><a href="/Adm.html" class="nav-link">Administración</a></div>
+      <div class="nav-item"><a href="/sistemaAsistencia.html" class="nav-link">Asistencia</a></div>
+      <div class="nav-item"><button class="login-btn">Iniciar Sesión</button></div>
+      <div id="userSection" class="user-section"></div>
+    </nav>
+  </div>
+</header>
+
+      
+
+    <div class="loading-screen">
+        <div class="loading-content">
+            <h2>Cargando Informes</h2>
+            <div class="loading-spinner"></div>
+            <p>Conectando con Firebase...</p>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div class="filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar publicador...">
+            </div>
+            <div class="select-wrapper">
+                <select id="groupFilter">
+                    <option value="">Todos los grupos</option>
+                    <!-- Se llenará dinámicamente -->
+                </select>
+            </div>
+            <div class="select-wrapper">
+                <select id="roleFilter">
+                    <option value="">Todos los roles</option>
+                    <option value="Publicador">Publicador</option>
+                    <option value="Precursor Auxiliar">Precursor Auxiliar</option>
+                    <option value="Precursor Regular">Precursor Regular</option>
+                </select>
+            </div>
+            <div class="select-wrapper">
+                <select id="participationFilter">
+                    <option value="">Todos</option>
+                    <option value="true">Participó</option>
+                    <option value="false">No participó</option>
+                </select>
+            </div>
+            <button class="btn-danger" id="deleteAllReportsBtn">
+                <i class="fas fa-trash"></i> Borrar Todos los Informes
+            </button>
+        </div>
+
+        <div class="stat-cards" id="summaryStats">
+            <!-- Stats cards se generarán aquí -->
+        </div>
+        
+        <div class="informes-grid" id="informesList">
+            <!-- Informes se generarán aquí -->
+        </div>
+    </div>
+    
+    <div class="login-modal" id="loginModal">
+        <!-- Contenido del modal de login -->
+    </div>
+
+    <div class="login-modal" id="registerModal">
+        <!-- Contenido del modal de registro -->
+    </div>
+
+    <div class="login-modal" id="resetPasswordModal">
+        <!-- Contenido del modal de recuperación de contraseña -->
+    </div>
+  
+    <!-- Scripts adicionales del segundo documento -->
+<!-- <script src="/ScriptLogin.js"></script>-->   
+ <!--<script src="/script.js"></script>-->
+    <script src="/ScriptLogin.js" type="module"></script>
+    <script src="/informes.js" type="module"></script>
+    <script src="/script.js" type="module"></script>
+    <script src="/mobile.js"></script>
+
+    <div class="login-modal" id="editReportModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Editar Informe</h2>
+            <form id="editReportForm">
+                <!-- Dentro del formulario de edición -->
+                <div class="form-group">
+                    <label for="editName">Nombre:</label>
+                    <input type="text" id="editName" name="editName" required>
+                </div>
+                
+                <!-- Nuevo campo para participación -->
+                <div class="form-group switch-container">
+                    <label for="editParticipated">¿Participó en el ministerio?</label>
+                    <label class="switch">
+                        <input type="checkbox" id="editParticipated" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editHours">Horas:</label>
+                    <input type="number" id="editHours" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="editStudies">Cursos Bíblicos:</label>
+                    <input type="number" id="editStudies" required>
+                </div>
+                <div class="form-group">
+                    <label for="editGroup">Grupo:</label>
+                    <select id="editGroup" required>
+                        ${Array.from(uniqueGroups).map(g => `<option value="${g}">${g}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editRole">Rol:</label>
+                    <select id="editRole" required>
+                        <option value="Publicador">Publicador</option>
+                        <option value="Precursor Auxiliar">Precursor Auxiliar</option>
+                        <option value="Precursor Regular">Precursor Regular</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editDate">Fecha:</label>
+                    <input type="date" id="editDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editObservations">Notas:</label>
+                    <textarea id="editObservations" rows="3"></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="submit-btn">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <!-- Modal de Confirmación -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <p id="confirmMessage"></p>
+      <div class="modal-buttons">
+        <button class="btn-secondary" id="confirmCancel">Cancelar</button>
+        <button class="btn-danger" id="confirmDelete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!--Otro modal-->
+  <div id="passwordPromptModal">
+    <div class="modal-content">
+        <h3>Eliminar todos los informes</h3>
+        <p>Ingrese la contraseña especial:</p>
+        <input type="password" id="deletePassword" placeholder="Contraseña">
+        <div class="modal-buttons" style="margin-top: 15px;">
+            <button class="btn-secondary" id="cancelDelete">Cancelar</button>
+            <button class="btn-danger" id="confirmDeleteAll">Confirmar</button>
+        </div>
+    </div>
+</div>
+<script>
+// Configura la contraseña especial (cámbiala por una segura)
+const SPECIAL_PASSWORD = "Arrayanes2024";
+
+// Elementos del DOM
+const deleteAllBtn = document.getElementById('deleteAllReportsBtn');
+const passwordModal = document.getElementById('passwordPromptModal');
+const confirmDeleteAllBtn = document.getElementById('confirmDeleteAll');
+const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+// Mostrar modal de contraseña
+deleteAllBtn.addEventListener('click', () => {
+    passwordModal.style.display = 'block';
+    document.getElementById('deletePassword').value = '';
+});
+
+// Cancelar eliminación
+cancelDeleteBtn.addEventListener('click', () => {
+    passwordModal.style.display = 'none';
+});
+
+// Confirmar eliminación
+confirmDeleteAllBtn.addEventListener('click', async () => {
+    const enteredPassword = document.getElementById('deletePassword').value;
+
+    if(enteredPassword === SPECIAL_PASSWORD) {
+        try {
+            // Mostrar loading (asumiendo que tienes una función showLoading)
+            if (typeof showLoading === 'function') {
+                showLoading();
+            }
+
+            // Eliminar todos los informes de Firebase
+            const reportsRef = firebase.database().ref('users');
+            await reportsRef.remove();
+
+            // Actualizar UI
+            passwordModal.style.display = 'none';
+            showToast('Todos los informes han sido eliminados', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } catch (error) {
+            console.error("Error deleting reports:", error);
+            showToast('Error al eliminar los informes', 'error');
+        } finally {
+            // Ocultar loading (asumiendo que tienes una función hideLoading)
+            if (typeof hideLoading === 'function') {
+                hideLoading();
+            }
+        }
+    } else {
+        showToast('Contraseña incorrecta', 'error');
+        document.getElementById('deletePassword').value = '';
+    }
+});
+
+// Configuración para el campo de participación
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle para activar/desactivar campos relacionados con horas cuando cambia participación
+    const participatedToggle = document.getElementById('editParticipated');
+    if (participatedToggle) {
+        participatedToggle.addEventListener('change', function() {
+            const hoursField = document.getElementById('editHours');
+            const studiesField = document.getElementById('editStudies');
+            
+            if (!this.checked) {
+                // Si no participó, establecer valores en 0 y deshabilitar
+                hoursField.value = 0;
+                studiesField.value = 0;
+                hoursField.disabled = true;
+                studiesField.disabled = true;
+            } else {
+                // Si participó, habilitar los campos
+                hoursField.disabled = false;
+                studiesField.disabled = false;
+            }
+        });
+    }
+});
+
+// Función para mostrar notificaciones (si no la tienes definida en otro script)
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    const container = document.getElementById('toast-container');
+    container.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 3000);
+}
+</script>
+</body>
+</html>
